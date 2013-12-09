@@ -11,7 +11,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131209224254) do
+ActiveRecord::Schema.define(:version => 20131209231051) do
+
+  create_table "sites", :force => true do |t|
+    t.string   "name"
+    t.string   "host_url"
+    t.text     "registry_csv_url"
+    t.text     "tagline"
+    t.string   "tweet_type"
+    t.string   "account_type"
+    t.text     "explanation"
+    t.text     "cta_iframe"
+    t.string   "time_zone"
+    t.boolean  "active",                   :default => false
+    t.boolean  "send_congrats",            :default => false
+    t.text     "twitter_client_key"
+    t.text     "twitter_client_secret"
+    t.text     "twitter_retweeter_key"
+    t.text     "twitter_retweeter_secret"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+  end
+
+  add_index "sites", ["active"], :name => "index_sites_on_active"
+  add_index "sites", ["host_url"], :name => "index_sites_on_host_url"
 
   create_table "users", :force => true do |t|
     t.string   "email",               :default => "", :null => false
