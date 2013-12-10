@@ -30,4 +30,5 @@ pickle-email-*.html
 .project
 config/initializers/secret_token.rb
 .ruby-gemset
+.DS_Store
 
