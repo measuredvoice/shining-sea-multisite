@@ -1,1 +1,109 @@
 <h1>Configure Shining Sea Sites</h1>
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Basic Configuration</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <p>To start a new site, go to Sites from the navigation menu above and choose "Add new". To edit an existing site, go to Sites and then choose the edit icon next to the site you want to edit.</p>
+    <p>Configure the basic attributes of the site:</p>
+    <ul>
+    <li>Name - Seen at the top of each page and in a few places in the text.</li>
+    <li>Tagline - A short description of the site; can contain simple HTML if you want to link somewhere.</li>
+    <li>Tweet type - A short description of the kind of tweets this site is ranking. For example, "health care industry tweets". This phrase will be used in sentences like, "the top 50 health care industry tweets from February 23, 2014."</li>
+    <li>Account type - A short description of the kind of Twitter account this site looks at. For example, "health care industry Twitter accounts". This phrase will also be used in sentences.</li>
+    <li>Explanation - A long description of what this site does. Can use basic HTML formatting. See the Great Gov Tweets site for an example.</li>
+    <li>CTA iframe - A section of HTML that is included on every page of the site, even older pages with historical data. This is a good spot to put the "Sign up for a 30-day trial" call-to-action.</li>
+    <li>Active - Check the "active" box when the site is ready to start publishing. Uncheck the "active" box to stop publishing the site.</li>
+    <li>Send congrats - Check the "send congrats" box when the site is configured to send congratulatory @reply messages to the top tweets for the day.</li>
+    <li>Congrats text - The text of the congratulatory message, like "Congratulations on writing an outstanding health care tweet!" The date, link, and Twitter account information will automatically be added to the text.</li>
+    </ul>
+    
+    <p>Before checking the "active" box, make sure the list of accounts, Twitter tokens, host name, and time zone are all properly configured.
+  </div>
+  <div class="col-md-6">
+    <img class="img-responsive" src="/assets/shining-sea-tweet-labeled-sized.jpg" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Host Name and Time Zones</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Host URL</h3>
+    <p>Choose a host name for this site, the URL where the site will be hosted. For example, healthtweets.measuredvoice.com. It should end in measuredvoice.com, with only letters and numbers before the first dot. Make sure that the host name is not already used; type it into a web browser to check.</p>
+    <p>Once you've picked the host name, enter it into the "Host URL" box in the site configuration and save the configuration.</p>
+    <p>When the site is first published, it will be configured in Amazon Web Services and set up to respond at this host name. If the host name is changed, a new site will be configured at the new hostname but old data won't be copied over automatically.</p>
+    
+    <h3>Time Zone</h3>
+    <p>Enter the time zone this site should use. The time zone affects when the site is published, and what time it considers "yesterday" to have started.</p>
+    <p>Common time zones include:</p>
+    <ul>
+    <li>Hawaii</li>
+    <li>Alaska</li>
+    <li>Pacific Time (US &amp; Canada)</li>
+    <li>Mountain Time (US &amp; Canada)</li>
+    <li>Central Time (US &amp; Canada)</li>
+		<li>Eastern Time (US &amp; Canada)</li>
+		<li>London</li>
+		<li>Paris</li>
+		<li>Sydney</li>
+		</ul>
+		<p>Be sure to copy the time zone exactly as it appears here.</p>
+  </div>
+  <div class="col-md-6">
+    <img class="img-responsive" src="/assets/shining-sea-weekly-labeled-sized.jpg" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Accounts and Twitter Tokens</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Set up a list of Twitter accounts</h3>
+    <p>To specify the Twitter accounts that this site will check, set up a Google spreadsheet with the list of account names.</p>
+    <ol>
+    <li>Create a Google spreadsheet or add a tab to an existing spreadsheet. List the account names in the first column, without headers.</li>
+    <li>In the spreadsheet, choose "File > Publish to the web..." and press "Start publishing."</li>
+    <li>Under "Get a link to the published data", choose "CSV" as the first option and the tab from step 1 as the second option. Copy the link it gives you.</li>
+    <li>In the Shining Sea admin application, go to the site configuration and paste the link into the "Registry CSV URL" box.</li>
+    <li>Save the site configuration.</li>
+    </ol> 
+    
+    <h3>Get Twitter tokens for this site</h3>
+    <p>Each site will have its own Twitter user with a Twitter application. To set up the site so it's authorized to use Twitter:</p>
+    <ol>
+    <li>On Twitter, sign up for a new account with the name of the site. For example, @GreatHealthTweets. Set up the account as desired. If the account will be tweeting congratulations, make sure it explains its purpose to avoid being marked as spam.</li>
+    <li>Go to https://dev.twitter.com/ and sign in with the new account.</li>
+    <li>Under the login menu in the upper right corner, choose "My applications".</li>
+    <li>Choose "Create application" from the right-hand side.</li>
+    <li>Under "Application details", fill in the name of the site. Note that Twitter applications have to be unique, so you might need to modify the name if you're setting up sites that are similarly named.</li>
+    <li>Fill in the description of the site. You can reuse the tagline  here.</li>
+    <li>Fill in the website URL. This is the host name you chose above, as a URL. For example: http://healthtweets.measuredvoice.com</li>
+    <li>Leave the "Callback URL" box blank.</li>
+    <li>Choose "Yes, I agree" to the rules, enter the captcha, and choose "Create your Twitter application." It should show you the application details.</li>
+    <li>Choose the "Settings" tab and scroll down to the "Application Type" section. Choose "Read and write", then scroll down and click "Update" to save the change.</li>
+    <li>Go back to the "Details" tab. Copy the key next to "Consumer key" and paste it into the site configuration under "Twitter client key".</li>
+    <li>Copy the key next to "Consumer secret" and paste it into the site configuration under "Twitter client secret".</li>
+    <li>Scroll down to the bottom of the Twitter application details and choose "Create my access token". Wait a minute or two and refresh the page.</li>
+    <li>Copy the key next to "Access token" and paste it into the site configuration under "Twitter retweeter key".</li>
+    <li>Copy the key next to "Access token secret" and paste it into the site configuration under "Twitter retweeter secret".</li>
+    <li>Save the changes to the site configuration.</li>
+    </ol>
+  </div>
+  <div class="col-md-6">
+    <img class="img-responsive" src="/assets/shining-sea-ranking-labeled-sized.jpg" >
+  </div>
+</div>
+
