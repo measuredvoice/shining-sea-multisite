@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131209232605) do
+ActiveRecord::Schema.define(:version => 20140107003805) do
 
   create_table "rails_admin_histories", :force => true do |t|
     t.text     "message"
@@ -44,6 +44,11 @@ ActiveRecord::Schema.define(:version => 20131209232605) do
     t.text     "twitter_retweeter_secret"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
+    t.string   "twitter_account_username"
+    t.string   "mv_partner_name"
+    t.text     "partner_logo_url"
+    t.string   "google_analytics_code"
+    t.string   "congrats_text"
   end
 
   add_index "sites", ["active"], :name => "index_sites_on_active"
