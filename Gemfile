@@ -16,6 +16,9 @@ gem 'jquery-rails'
 # Set up Heroku-friendly logging and assets
 gem 'rails_12factor'
 
+# Use the Twitter API
+gem 'twitter'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

@@ -6,6 +6,22 @@ class Site < ActiveRecord::Base
     :partner_logo_url, :google_analytics_code, :congrats_text 
 
   validates :name, :presence => true
+
+  def self.active
+    where(:active => true).order("sites.id")
+  end
+  
+  def self.authorized
+    # FIXME: Use an auth_is_valid flag instead
+    where("twitter_client_key != '' AND twitter_client_secret != ''").order("sites.id")
+  end
+  
+  def twitter_client
+    @twitter_client ||= Twitter::REST::Client.new do |config|
+      config.consumer_key        = twitter_client_key
+      config.consumer_secret     = twitter_client_secret
+    end
+  end
   
   rails_admin do
     configure :name, :string

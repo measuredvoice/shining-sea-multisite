@@ -6,5 +6,8 @@ ShiningSeaMultisite::Application.routes.draw do
   # Default to the documentation and examples
   root :to => 'documentation#index'
 
+  # Quick tools section
+  match "tools" => "tools#index", :via => :get, :as => :tools
+  match "tools/twitter" => "tools#twitter_list", :via => :post, :as => :twitter_list
 
 end
