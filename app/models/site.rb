@@ -25,6 +25,16 @@ class Site < ActiveRecord::Base
     end
   end
   
+  def accounts
+    # TODO: Catch and report errors in the CSV file
+    CSV.parse(RestClient.get(registry_csv_url)).map do |row|
+      screen_name = row.first
+      next unless screen_name.present?
+      screen_name.gsub!(/[^a-zA-Z0-9_]/,'')
+      Account.new(:screen_name => screen_name, :twitter_client => twitter_client)
+    end.find_all {|a| a.present?}  
+  end
+
   rails_admin do
     configure :name, :string
     configure :cta_iframe do

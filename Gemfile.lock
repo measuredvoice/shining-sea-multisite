@@ -143,6 +143,8 @@ GEM
       json (~> 1.4)
     ref (1.0.5)
     remotipart (1.2.1)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     safe_yaml (0.9.7)
     sass (3.2.12)
     sass-rails (3.2.6)
@@ -198,6 +200,7 @@ DEPENDENCIES
   rails (= 3.2.14)
   rails_12factor
   rails_admin
+  rest-client
   sass-rails (~> 3.2.3)
   therubyracer
   twitter
