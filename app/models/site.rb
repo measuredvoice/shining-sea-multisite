@@ -20,6 +20,8 @@ class Site < ActiveRecord::Base
     @twitter_client ||= Twitter::REST::Client.new do |config|
       config.consumer_key        = twitter_client_key
       config.consumer_secret     = twitter_client_secret
+      config.access_token        = twitter_retweeter_key
+      config.access_token_secret = twitter_retweeter_secret
     end
   end
   
