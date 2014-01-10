@@ -1,8 +1,25 @@
-class Account
-  include Initializable
+# == Schema Information
+#
+# Table name: accounts
+#
+#  id          :integer          not null, primary key
+#  site_id     :integer
+#  screen_name :string(255)
+#  user_id     :string(255)
+#  name        :string(255)
+#  followers   :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
+class Account < ActiveRecord::Base
+  attr_accessible :screen_name, :user_id, :name, :followers
   
-  attr_accessor :twitter_client, :screen_name, :user_id, :name, :agency_id, :agency_name, 
-    :organization, :agencies, :followers
+  belongs_to :site
+  
+  def self.need_update
+    where("accounts.updated_at < ?", 1.day.ago)
+  end
   
   def tweets_on(metrics_date)
     day_start = metrics_date.beginning_of_day
@@ -22,24 +39,14 @@ class Account
     end
   end
   
-  def get_twitter_details!
-    begin
-      twitter_user = twitter_client.user(screen_name)
-    rescue Twitter::Error::NotFound
-      puts "ERROR: Account #{screen_name} does not exist."
-      return nil
-    rescue Twitter::Error::TooManyRequests => error
-      # This was a rate limit issue, pause to let Twitter catch up
-      puts "Rate limit was exceeded. Waiting for 5 minutes..."
-      sleep 5.minutes
-      retry
-    rescue Exception => error
-      puts "Unknown Exception when getting user details: " + error.inspect
-      return nil
-    end
-      
+  def update_from_twitter(twitter_user)
     self.user_id   = twitter_user.id
     self.name      = twitter_user.name
     self.followers = twitter_user.followers_count
+    self.save
+  end
+  
+  def twitter_client
+    site.twitter_client
   end
 end

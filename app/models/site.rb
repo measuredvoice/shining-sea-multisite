@@ -1,3 +1,32 @@
+# == Schema Information
+#
+# Table name: sites
+#
+#  id                       :integer          not null, primary key
+#  name                     :string(255)
+#  host_url                 :string(255)
+#  registry_csv_url         :text
+#  tagline                  :text
+#  tweet_type               :string(255)
+#  account_type             :string(255)
+#  explanation              :text
+#  cta_iframe               :text
+#  time_zone                :string(255)
+#  active                   :boolean          default(FALSE)
+#  send_congrats            :boolean          default(FALSE)
+#  twitter_client_key       :text
+#  twitter_client_secret    :text
+#  twitter_retweeter_key    :text
+#  twitter_retweeter_secret :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  twitter_account_username :string(255)
+#  mv_partner_name          :string(255)
+#  partner_logo_url         :text
+#  google_analytics_code    :string(255)
+#  congrats_text            :string(255)
+#
+
 class Site < ActiveRecord::Base
   attr_accessible :account_type, :cta_iframe, :explanation, :host_url, :name, 
     :tagline, :time_zone, :tweet_type, :active, :send_congrats, :registry_csv_url, 
@@ -6,6 +35,8 @@ class Site < ActiveRecord::Base
     :partner_logo_url, :google_analytics_code, :congrats_text 
 
   validates :name, :presence => true
+  
+  has_many :accounts
 
   def self.active
     where(:active => true).order("sites.id")
@@ -25,14 +56,53 @@ class Site < ActiveRecord::Base
     end
   end
   
-  def accounts
+  def update_accounts!
     # TODO: Catch and report errors in the CSV file
-    CSV.parse(RestClient.get(registry_csv_url)).map do |row|
+    current_accounts = CSV.parse(RestClient.get(registry_csv_url)).map do |row|
       screen_name = row.first
-      next unless screen_name.present?
-      screen_name.gsub!(/[^a-zA-Z0-9_]/,'')
-      Account.new(:screen_name => screen_name, :twitter_client => twitter_client)
-    end.find_all {|a| a.present?}  
+      return nil unless screen_name.present?
+      screen_name.gsub(/[^a-zA-Z0-9_]/,'')
+    end.find_all {|a| a.present?}
+    
+    existing_accounts = accounts.map {|a| a.screen_name}
+    
+    new_accounts = current_accounts - existing_accounts
+    puts "Adding accounts: #{new_accounts.inspect}"
+    new_accounts.each do |screen_name|
+      accounts.create(:screen_name => screen_name)
+    end
+
+    old_accounts = existing_accounts - current_accounts
+    puts "Removing accounts: #{old_accounts.inspect}"
+    old_accounts.each do |screen_name|
+      account = accounts.find_by_screen_name(screen_name)
+      account.destroy
+    end
+    
+    # Look up the Twitter details for accounts in batches
+    accounts_to_update = accounts.need_update.map {|a| a.screen_name} + new_accounts
+    
+    begin
+      twitter_users = twitter_client.users(accounts_to_update)
+    rescue Twitter::Error::TooManyRequests => error
+      # This was a rate limit issue, pause to let Twitter catch up
+      puts "Rate limit was exceeded. Waiting for 5 minutes..."
+      sleep 5.minutes
+      retry
+    rescue Exception => error
+      puts "Unknown Exception when getting Twitter user details: " + error.inspect
+      twitter_users = []
+    end
+    
+    not_found = accounts_to_update - twitter_users.map {|u| u.screen_name}
+    puts "Didn't find these: #{not_found.inspect}"
+    
+    puts "Updating Twitter details..." 
+    twitter_users.each do |user|
+      account = accounts.find_by_screen_name(user.screen_name)
+      account.update_from_twitter(user)
+    end
+    
   end
 
   rails_admin do
