@@ -49,4 +49,13 @@ class Account < ActiveRecord::Base
   def twitter_client
     site.twitter_client
   end
+
+  rails_admin do
+    list do
+      field :screen_name
+      field :site
+      field :name
+      field :followers
+    end
+  end
 end

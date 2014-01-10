@@ -40,11 +40,15 @@ RailsAdmin.config do |config|
     dashboard                     # mandatory
     # collection actions 
     index                         # mandatory
-    new
+    new do
+      only [User, Site]
+    end
     export
     # member actions
     show
-    edit
+    edit do
+      only [User, Site]
+    end
     delete do
       only User
     end
