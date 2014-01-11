@@ -37,6 +37,7 @@ class Site < ActiveRecord::Base
   validates :name, :presence => true
   
   has_many :accounts
+  has_many :tweet_metrics, :through => :accounts
 
   def self.active
     where(:active => true).order("sites.id")
@@ -176,6 +177,10 @@ class Site < ActiveRecord::Base
   
   def host_dns_name
     host_url.present? ? "#{host_url}." : nil
+  end
+
+  def time_zone_obj
+    ActiveSupport::TimeZone.new(time_zone)
   end
   
   def update_accounts!

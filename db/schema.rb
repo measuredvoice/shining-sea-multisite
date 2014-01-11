@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140109225928) do
+ActiveRecord::Schema.define(:version => 20140110190416) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "site_id"
@@ -65,6 +65,22 @@ ActiveRecord::Schema.define(:version => 20140109225928) do
 
   add_index "sites", ["active"], :name => "index_sites_on_active"
   add_index "sites", ["host_url"], :name => "index_sites_on_host_url"
+
+  create_table "tweet_metrics", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "tweet_id"
+    t.datetime "published_at"
+    t.integer  "audience"
+    t.integer  "reach"
+    t.integer  "kudos"
+    t.integer  "engagement"
+    t.string   "tweet_text"
+    t.boolean  "metrics_ready", :default => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+  end
+
+  add_index "tweet_metrics", ["account_id", "metrics_ready"], :name => "index_tweet_metrics_on_account_id_and_metrics_ready"
 
   create_table "users", :force => true do |t|
     t.string   "email",               :default => "", :null => false
