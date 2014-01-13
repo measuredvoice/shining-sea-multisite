@@ -1,5 +1,9 @@
 require File.expand_path('../boot', __FILE__)
 
+# The config/too_many_secrets.rb file is optional. See the example file for directions.
+secrets_file = File.expand_path('../too_many_secrets', __FILE__)
+require secrets_file if File.exists?(secrets_file + '.rb')
+
 # Pick the frameworks you want:
 require "active_record/railtie"
 require "action_controller/railtie"

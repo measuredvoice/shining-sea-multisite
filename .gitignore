@@ -24,10 +24,12 @@ capybara-*.html
 /public/system/*
 /coverage/
 /spec/tmp/*
+/config/too_many_secrets.rb
 **.orig
 rerun.txt
 pickle-email-*.html
 .project
 .ruby-gemset
 .DS_Store
+
 
