@@ -33,9 +33,15 @@ GEM
       rake
     arel (3.0.3)
     atomic (1.1.14)
+    aws-sdk (1.32.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
+      uuidtools (~> 2.1)
     bcrypt-ruby (3.1.2)
     bootstrap-sass (2.3.2.2)
       sass (~> 3.2)
+    boxer (1.0.2)
+      activesupport (>= 3.0.0)
     buftok (0.2.0)
     builder (3.0.4)
     coffee-rails (3.2.2)
@@ -188,6 +194,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
 
@@ -196,6 +203,8 @@ PLATFORMS
 
 DEPENDENCIES
   annotate (~> 2.5.0)
+  aws-sdk
+  boxer
   coffee-rails (~> 3.2.1)
   devise
   jquery-rails

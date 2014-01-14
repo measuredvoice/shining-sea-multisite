@@ -22,6 +22,10 @@ gem 'twitter'
 # Get account lists from remote APIs
 gem 'rest-client'
 
+# Store JSON data on Amazon Web Services S3 
+gem 'aws-sdk'
+gem 'boxer'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

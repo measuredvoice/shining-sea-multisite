@@ -9,7 +9,9 @@ ENV['AWS_ACCESS_KEY_ID'] = "your AWS S3 access key"
 ENV['AWS_SECRET_ACCESS_KEY'] = "your AWS S3 access secret"
 
 # The Amazon Web Services region to specify for your S3 buckets
+# See http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region for options.
 ENV['AWS_REGION'] = "us-east-1"
+ENV['AWS_REGION_ZONE_ID'] = "Z3AQBSTGFYJSTF"
 
 # The Amazon Route 53 zone ID to use for DNS entries
 ENV['AWS_DNS_ZONE_ID'] = "/hostedzone/SOMEEXAMPLE"
