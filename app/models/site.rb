@@ -87,6 +87,25 @@ class Site < ActiveRecord::Base
     bucket.configure_website do |cfg|
       cfg.error_document_key = 'assets/errors/404.html'
     end
+    
+    # Add a site policy to allow public access.
+    # The AWS gem's policy generator doesn't quite work, so build JSON.
+    json_policy =     
+      {
+        "Version" => "2008-10-17",
+        "Statement" => [
+          {
+            "Sid" => "AllowPublicRead",
+            "Effect" => "Allow",
+            "Principal" => {
+              "AWS" => "*"
+            },
+            "Action" => "s3:GetObject",
+            "Resource" => "arn:aws:s3:::#{host_url}/*"
+          }
+        ]
+      }.to_json
+    bucket.policy = json_policy
   end
   
   def s3_bucket
