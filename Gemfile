@@ -23,7 +23,7 @@ gem 'twitter'
 gem 'rest-client'
 
 # Store JSON data on Amazon Web Services S3 
-gem 'aws-sdk'
+gem 'aws-sdk', '~> 1.0'
 gem 'boxer'
 
 # Gems used only for assets and not required

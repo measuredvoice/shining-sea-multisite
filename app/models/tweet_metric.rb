@@ -53,17 +53,34 @@ class TweetMetric < ActiveRecord::Base
   end
   
   def published_date
-    published_at.in_time_zone(site.time_zone).strftime("%Y-%m-%d")
+    local_published_at.strftime("%Y-%m-%d")
   end
   
-  def complete_metrics!(tweet)
+  def local_published_at
+    published_at.in_time_zone(site.time_zone)
+  end
+  
+  def complete_metrics!(tweet=nil)
+    if tweet.nil?
+      begin
+        tweet = twitter_client.status(tweet_id)
+      rescue Twitter::Error::TooManyRequests => error
+        # This was a rate limit issue, so move on
+        puts "Rate limit was exceeded."
+        return false
+      rescue Exception => error
+        puts "Unknown Exception when getting tweet: " + error.inspect
+        return false
+      end      
+    end
+    
     self.kudos = tweet.favorite_count
     self.engagement = tweet.retweet_count
     self.count_reach!
     self.metrics_ready = true
     self.save
   end
-  
+    
   def count_reach!
     # Only use expensive API calls if there are retweets to be counted
     if engagement == 0
@@ -85,5 +102,9 @@ class TweetMetric < ActiveRecord::Base
         total_reach + retweeter.followers_count
       end
     end
+  end
+  
+  def as_summary
+    TweetSummary.from_tweet_metric(account, self, local_published_at)
   end
 end

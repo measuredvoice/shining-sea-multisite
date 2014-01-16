@@ -232,6 +232,15 @@ class Site < ActiveRecord::Base
     
   end
 
+  def write_to_s3(summary)
+    puts "  Writing #{summary.filename} to S3..."
+    s3_bucket.objects[summary.filename].write(summary.to_json)
+  end
+  
+  def written_to_s3?(summary)
+    s3_bucket.objects[summary.filename].exists?
+  end
+
   rails_admin do
     configure :name, :string
     configure :cta_iframe do

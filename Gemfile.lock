@@ -203,7 +203,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate (~> 2.5.0)
-  aws-sdk
+  aws-sdk (~> 1.0)
   boxer
   coffee-rails (~> 3.2.1)
   devise

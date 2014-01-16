@@ -18,3 +18,7 @@ ENV['AWS_DNS_ZONE_ID'] = "/hostedzone/SOMEEXAMPLE"
 
 # The host name to use in email links back to this app
 ENV['SHINING_SEA_MULTISITE_HOST'] = "shining-sea-multisite.example.com"
+
+# Alpha and Beta factors to use in the Bayesian algorithm
+ENV['SHINING_SEA_ALPHA'] = '4.84'
+ENV['SHINING_SEA_BETA'] = '44000'
