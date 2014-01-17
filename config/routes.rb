@@ -9,5 +9,8 @@ ShiningSeaMultisite::Application.routes.draw do
   # Quick tools section
   match "tools" => "tools#index", :via => :get, :as => :tools
   match "tools/twitter" => "tools#twitter_list", :via => :post, :as => :twitter_list
+  
+  get "site/:id" => "sites#show"
+  get "site/:id/:screen_name/:tweet_id" => "tweets#show"
 
 end

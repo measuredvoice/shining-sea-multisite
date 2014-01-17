@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="http://use.typekit.com/bvc1jkf.js"></script>
+  	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  	<meta property="twitter:account_id" content="52209876" />
+    <title><%= @site.name %> from <%= @date.to_formatted_s(:long) %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/assets/css/ggt.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+  	<div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-12">
+          <span id="mv-logo"><a href="http://measuredvoice.com">Measured Voice, the only social media management tool designed for government.</a></span>  
+        </div>
+      </div>
+    </div>
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="brand col-lg-8 col-12">
+            <h1><a href="/"><%= @site.name %></a></h1>
+            <h3 class="tagline"><%=raw @site.tagline %></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+		<div class="row tweet-lists">
+		  <div class="col-12">
+		    <div class="row">
+          <div class="top-tweet-column col-12 col-lg-6">
+            <h3>Top <%= @site.tweet_type %> from <%= @date.to_formatted_s(:long) %></h3>
+            
+            <div class="row">
+              <div class="col-lg-6 col-6">
+                &lsaquo; <%=raw date_link(@date, :previous) %>
+              </div>
+                        
+              <div class="col-lg-6 col-6">
+                <% if !@is_main_index %>
+                <span class="pull-right"><%=raw date_link(@date, :next) %> &rsaquo;</span>
+                <% end %>
+              </div>
+            </div>
+            
+            <ol>
+    		    <% @tweets.each do |tweet| %>
+    		      <li>
+    		        <a href="/<%= tweet[:screen_name] %>/status/<%= tweet[:tweet_id] %>/" class="details-link">More details</a>
+    		        <div class="that-twitter-embed-thingy">
+    		        <blockquote class="twitter-tweet">
+    		        <p><%= tweet.tweet_text %></p>
+    		        &mdash; <%= tweet.account.name %> (@<%= tweet.account.screen_name %>) 
+    		        <a href="https://twitter.com/<%= tweet.account.screen_name %>/statuses/<%= tweet.tweet_id %>"><%= @date %></a></blockquote>
+    		        </div>
+    		      </li>
+    		    <% end %>
+    		    </ol>
+          </div>
+
+          <div class="col-12 col-offset-1 col-lg-5 home-intro">
+            
+            <iframe src="/iframes/1" class="mv-ad" id="iframe1"></iframe>
+            <hr>
+            
+            <h3>What is this?</h3>
+            <p>
+            <%= @site.explanation %>
+            </p>
+            <p>
+              <b>Who&rsquo;s Behind This?</b>
+            </p>
+            <p>
+              We&rsquo;re the creators of <a href="http://measuredvoice.com">Measured Voice</a>, 
+              the only social media management tool designed with government in mind. 
+              We aspire to help government agencies develop professional, mission-driven, 
+              social media operations.
+            </p>
+            <p>
+              Sign up for a <a href="http://measuredvoice.com/signup/"><b>30-day free trial</b></a> 
+              of Measured Voice.
+            </p>
+            <p>
+              If you have any questions, comments, or suggestions for <%= @site.name %>, 
+              please send an email to hi [at] measuredvoice.com.
+            </p>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-12">
+          <p>&copy; <%= @date.year %> Measured Voice</p>
+          <hr>
+          <p><a href="http://measuredvoice.com">Measured Voice</a> is the only social media tool designed for government. <strong><a href="http://measuredvoice.com">Start your free 30-day trial today</a>.</strong></p>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </footer>
+    <!-- JavaScript plugins (requires jQuery) -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <% if @site.google_analytics_code %>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', '<%= @site.google_analytics_code %>', '<%= @site.host_url %>');
+      ga('send', 'pageview');
+
+    </script>
+    <% end %>
+  </body>
+</html>

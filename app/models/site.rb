@@ -37,7 +37,13 @@ class Site < ActiveRecord::Base
   validates :name, :presence => true
   
   has_many :accounts
-  has_many :tweet_metrics, :through => :accounts
+  has_many :tweet_metrics, :through => :accounts do
+    def from_yesterday
+      account = proxy_association.owner
+      yesterday = account.time_zone_obj.now - 1.day
+      from_date(yesterday)
+    end
+  end
 
   def self.active
     where(:active => true).order("sites.id")
@@ -258,6 +264,12 @@ class Site < ActiveRecord::Base
   
   def written_to_s3?(summary)
     s3_bucket.objects[summary.filename].exists?
+  end
+  
+  def ranked_tweets
+    tweet_metrics.from_yesterday.sort do |a,b|
+      b.mv_score <=> a.mv_score
+    end
   end
 
   rails_admin do

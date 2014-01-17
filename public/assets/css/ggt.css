@@ -1,0 +1,349 @@
+html, body {
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+html {
+  background-color: #104469;
+}
+
+body {
+  background-color: #FFF;
+}
+
+a{color:#003366;text-decoration:none;}
+a:hover{color:#00adda;text-decoration:underline;}
+
+h1, h2, h3 {
+	font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@-webkit-keyframes rotate {
+  0% {opacity: 1;}
+  20% {opacity: 0.8;}
+  40% {opacity: 0.3;}
+  50% {opacity: 0.1;}
+  60% {opacity: 0.3;}
+  80% {opacity: 0.8;}
+  100% {opacity: 1;}
+}
+
+
+#plot-container {
+  position: relative;
+}
+
+#plot-loader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 406px;
+  padding-top: 175px;
+  background-color: #eee;
+}
+
+#plot-loader .loading-text {
+  display: block;
+  text-align: center;
+  background-color: #eee;
+}
+
+#plot-loader .loading-text span {
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  color: #000;
+}
+
+#tweet-display blockquote {
+  margin: 15px 0 0 0;
+  padding: 0;
+  border: none;
+  text-align: center;
+  color: #666;
+}
+
+#tweet-display blockquote a {
+  color: #666;
+}
+
+#tweet-loading-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.jumbotron a {
+	color:#104469;
+}
+
+.brand h1 a {
+	color:#333;
+}
+.tweet-stats, .tweet-navigation {
+	padding:0 .5em 0 .8em;
+	margin: 10px 0 1.5em 0;
+}
+
+.rank-score {
+	color: #104469;
+	border-radius: 5px;
+	border: 1px solid;
+	overflow: auto;
+	margin: 10px 0 1.5em 0;
+	box-shadow: rgba(0, 0, 0, 0.148438) 0px 1px 3px 0px;
+}
+
+.rank-number {
+	font-family: "atrament-web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 290%;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.rank-number .superscript {
+	font-size:40%;
+	vertical-align: middle;
+}
+
+.rank-details {
+	border-left: 1px solid;
+	padding-top:.5em;
+}
+
+.rank-details p {
+	vertical-align: middle;
+	padding: .5em 0;
+}
+
+.mv-score {
+	font-size: 200%;
+/*	padding:.2em;*/
+/*	background-color: #006692;*/
+/*	color:#FFF;*/
+/*	border-radius:5px;*/
+	margin-bottom: .5em;
+}
+
+.retweet-count i.icon-retweet, .favorite-count i.icon-star, .reach-total i.icon-bullhorn, .big-number  {
+	font-size: 200%;
+}
+
+.retweet-count i.icon-retweet, .favorite-count i.icon-star, .reach-total i.icon-bullhorn {
+	display:inline-block;
+	width: 1.3em;
+}
+
+i.icon-retweet {
+	color:#568934;
+}
+
+i.icon-star {
+	color:#ff8b00;
+}
+
+i.icon-bullhorn {
+	color:#0096D6;
+}
+
+/*.mv-ads {
+	margin:2em 0;
+}
+
+.mv-ad1, .mv-ad2 {
+	border-radius:5px;
+	background-color:#EFEFEF;
+	height:140px;
+}
+*/
+
+iframe.mv-ad {
+  width:100%;
+}
+
+iframe.mv-ad {
+  border:none;
+  height: 160px;
+}
+
+.home-intro iframe.mv-ad {
+  margin-left: -15px;
+}
+
+.tweet-navigation .previous, .tweet-navigation .next {
+	color: #104469;
+	line-height: 1.1;
+  font-size: 80%;
+}
+
+@media screen and (min-width: 768px) {
+  .tweet-navigation .previous, .tweet-navigation .next {
+  	font-size: 100%;
+  }
+}
+
+.tweet-navigation a:hover, .jumbotron a:hover {
+	color: #0096D6;
+	text-decoration: none;
+}
+
+.tweet-navigation .next {
+	text-align: right;
+}
+
+.navigation-number {
+	font-family: "atrament-web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.4em;
+	text-align: center;
+	display:inline-block;
+	width:1.4em;
+	height:1.4em;
+	border-radius: 3px;
+	border: solid 1px;
+	margin-bottom: .3em;
+}
+
+footer {
+  margin-top:15px;
+	padding: 1em 0 5em;
+	color:#FFF;
+	background-color: #104469;
+	overflow: auto;
+}
+
+footer a {
+	color:#FFFF77;
+}
+
+footer a:hover {
+	background-color: #FFFF77;
+	color:104469;
+	text-decoration: none;
+}
+
+#mv-logo a {
+	text-indent: -9000px;
+	display:block;
+	width:290px;
+	height:90px;
+	background: transparent url('/assets/img/mv-logo-800x248.png') no-repeat top left;
+	background-size: 290px 90px;
+	position:absolute;
+	top:0;
+}
+
+.jumbotron {
+	padding:90px 0 10px 0;
+}
+
+.top-tweet-column ol {
+  counter-reset: li;
+  padding-left:0;
+  margin:4em 0 0 0;
+}
+
+.top-tweet-column ol > li {
+  position:relative;
+  margin: 2em 0 4em 0;
+  list-style: none; 
+}
+
+.top-tweet-column ol > li:before {
+  content:"#" counter(li); 
+  counter-increment:li;
+  color: #104469;
+  position:absolute;
+  top:-1.5em;
+  left:.2em;
+  font-size: 160%;
+  font-family: "atrament-web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.top-tweet-column ol > li a.details-link {
+  color: #104469;
+  min-width:300px;
+  max-width:474px;
+  width:98%;
+  position:absolute;
+  display:inline-block;
+  padding-right: .5em;
+  text-align: right;
+  font-size: 120%;
+  top:-1.5em;
+  text-decoration: underline;
+}
+
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 30px 0 10px 0;
+    border-radius: 0;
+    margin-bottom: 10px;
+  }
+  .rank-number {
+		font-size: 400%;
+		margin-top: -.2em;
+	}
+
+  .top-tweet-column {
+  	min-height: 1px;
+  	padding-right: 15px;
+  	padding-left: 15px;
+  }
+  #mv-logo a {
+		text-indent: -9000px;
+		display:block;
+		width:200px;
+		height:62px;
+		background: transparent url('/assets/img/mv-logo-800x248.png') no-repeat top left;
+		background-size: 200px 62px;
+		position:absolute;
+		top:0;
+		right:20px;
+	}
+  
+  .top-tweet-column ol {
+    margin:2em 0 0 0;
+  }  
+
+  .top-tweet-column ol > li {
+    margin: 0 0 4em 6em;
+  }  
+
+  .top-tweet-column ol > li:before {
+    content:"#" counter(li); 
+    counter-increment:li;
+    color: #104469;
+    position:absolute;
+    top:0;
+    left:-2em;
+    margin-right:8px;
+    font-size: 300%;
+    font-family: "atrament-web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align:center;
+    border-radius: 5px;
+    border: 1px solid;
+    width:1.7em;
+  }  
+
+  .top-tweet-column ol > li a.details-link {
+    color: #104469;
+    position:absolute;
+    min-width:4em;
+    max-width:4em;
+    display:inline-block;
+    text-align:center;
+    top:0;
+    left:-5.1em;
+    padding:4em 0 4em 10px;
+    font-size: 1.2em;
+    text-decoration: underline;
+  }  
+
+  .top-tweet-column ol > li a.details-link:hover {
+    color:#0096D6;
+    text-decoration: none;
+  }
+
+}

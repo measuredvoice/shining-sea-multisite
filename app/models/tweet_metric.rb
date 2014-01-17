@@ -107,4 +107,18 @@ class TweetMetric < ActiveRecord::Base
   def as_summary
     TweetSummary.from_tweet_metric(account, self, local_published_at)
   end
+
+  def mv_score
+    return 0 if audience == 0
+    ((bayes_alpha + kudos * 1.5 + engagement) * 100000 / 
+      (bayes_beta + audience)).to_i
+  end
+
+  def bayes_alpha
+    (ENV['SHINING_SEA_ALPHA'] || '4.84').to_f
+  end
+  
+  def bayes_beta
+    (ENV['SHINING_SEA_BETA'] || '44000').to_f
+  end
 end
