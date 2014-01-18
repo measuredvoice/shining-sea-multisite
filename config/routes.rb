@@ -11,6 +11,7 @@ ShiningSeaMultisite::Application.routes.draw do
   match "tools/twitter" => "tools#twitter_list", :via => :post, :as => :twitter_list
   
   get "site/:id" => "sites#show"
-  get "site/:id/:screen_name/:tweet_id" => "tweets#show"
+  get "site/:id/:screen_name/status/:tweet_id" => "tweets#show"
 
+  get "iframes/:id" => "sites#iframe"
 end

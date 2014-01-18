@@ -113,6 +113,11 @@ class TweetMetric < ActiveRecord::Base
     ((bayes_alpha + kudos * 1.5 + engagement) * 100000 / 
       (bayes_beta + audience)).to_i
   end
+  
+  # TEMPORARY
+  def daily_rank
+    3
+  end
 
   def bayes_alpha
     (ENV['SHINING_SEA_ALPHA'] || '4.84').to_f

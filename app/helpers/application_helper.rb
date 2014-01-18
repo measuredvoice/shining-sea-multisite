@@ -18,4 +18,16 @@ module ApplicationHelper
     
     "<a href=\"/#{dir}/#{link_date.strftime('%Y-%m-%d')}\">#{link_date.strftime('%B %-d, %Y')}</a>"
   end
+
+  def pretty_number(number)
+    number.to_s.reverse.gsub(%r{([[:digit:]]{3})(?=[[:digit:]])(?![[:digit:]]*\.)}, "\\1,").reverse
+  end
+  
+  def pluralize(number, singular, plural)
+    if number == 1
+      singular
+    else
+      plural
+    end
+  end
 end

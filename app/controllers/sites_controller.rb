@@ -14,5 +14,8 @@ class SitesController < ApplicationController
     
   end
   
+  def iframe
+    @site = Site.find(params[:id])    
+  end
 end
   

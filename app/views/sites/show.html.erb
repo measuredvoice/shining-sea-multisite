@@ -15,7 +15,13 @@
   <body>
   	<div class="container">
       <div class="row">
-        <div class="col-lg-12 col-12">
+        <div class="col-lg-2 col-2">
+          <div class="twitter-follow-container">
+            <a href="https://twitter.com/GorillaGreets" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @GorillaGreets</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          </div>
+        </div>
+        <div class="col-lg-10 col-10">
           <span id="mv-logo"><a href="http://measuredvoice.com">Measured Voice, the only social media management tool designed for government.</a></span>  
         </div>
       </div>
@@ -24,7 +30,11 @@
       <div class="container">
         <div class="row">
           <div class="brand col-lg-8 col-12">
+            <% if @is_main_index %>
+            <h1><%= @site.name %></h1>
+            <% else %>
             <h1><a href="/"><%= @site.name %></a></h1>
+            <% end %>
             <h3 class="tagline"><%=raw @site.tagline %></h3>
           </div>
         </div>
@@ -52,12 +62,13 @@
             <ol>
     		    <% @tweets.each do |tweet| %>
     		      <li>
-    		        <a href="/<%= tweet[:screen_name] %>/status/<%= tweet[:tweet_id] %>/" class="details-link">More details</a>
+    		        <a href="/<%= tweet.account.screen_name %>/status/<%= tweet.tweet_id %>/" class="details-link">More details</a>
     		        <div class="that-twitter-embed-thingy">
     		        <blockquote class="twitter-tweet">
     		        <p><%= tweet.tweet_text %></p>
     		        &mdash; <%= tweet.account.name %> (@<%= tweet.account.screen_name %>) 
-    		        <a href="https://twitter.com/<%= tweet.account.screen_name %>/statuses/<%= tweet.tweet_id %>"><%= @date %></a></blockquote>
+    		        <a href="https://twitter.com/<%= tweet.account.screen_name %>/statuses/<%= tweet.tweet_id %>"><%= @date %></a>
+    		        </blockquote>
     		        </div>
     		      </li>
     		    <% end %>
@@ -66,12 +77,15 @@
 
           <div class="col-12 col-offset-1 col-lg-5 home-intro">
             
-            <iframe src="/iframes/1" class="mv-ad" id="iframe1"></iframe>
+            <% if @site.cta_iframe.present? %>
+            <iframe src="/iframes/<%= @site.id %>" class="mv-ad" id="iframe1"></iframe>
+            <% end %>
+            
             <hr>
             
             <h3>What is this?</h3>
             <p>
-            <%= @site.explanation %>
+              <%= @site.explanation %>
             </p>
             <p>
               <b>Who&rsquo;s Behind This?</b>
@@ -83,7 +97,7 @@
               social media operations.
             </p>
             <p>
-              Sign up for a <a href="http://measuredvoice.com/signup/"><b>30-day free trial</b></a> 
+              Sign up for a <a href="https://app.measuredvoice.com/signup"><b>30-day free trial</b></a> 
               of Measured Voice.
             </p>
             <p>
@@ -101,7 +115,10 @@
         <div class="col-lg-12 col-12">
           <p>&copy; <%= @date.year %> Measured Voice</p>
           <hr>
-          <p><a href="http://measuredvoice.com">Measured Voice</a> is the only social media tool designed for government. <strong><a href="http://measuredvoice.com">Start your free 30-day trial today</a>.</strong></p>
+          <p><a href="http://measuredvoice.com">Measured Voice</a> is the only social 
+          media tool designed for government. 
+          <strong><a href="https://app.measuredvoice.com/signup">Start your free 30-day 
+          trial today</a>.</strong></p>
           <hr>
         </div>
       </div>

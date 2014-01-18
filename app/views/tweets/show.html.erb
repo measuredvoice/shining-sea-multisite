@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="http://use.typekit.com/bvc1jkf.js"></script>
+  	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <title><%= @site.name %> - #<%= @tweet.daily_rank %> on <%= @date.to_formatted_s(:long) %> 
+      from @<%= @account.screen_name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/assets/css/ggt.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2 col-2">
+          <div class="twitter-follow-container">
+            <a href="https://twitter.com/gorillagreets" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @gorillagreets</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          </div>
+        </div>
+        <div class="col-lg-10 col-10">
+          <span id="mv-logo"><a href="http://measuredvoice.com">Measured Voice, the only social media management tool designed for government.</a></span>  
+        </div>
+      </div>
+    </div>
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="brand col-lg-8 col-12">
+            <h1><a href="/"><%= @site.name %></a></h1>
+            <h3 class="tagline"><%=raw @site.tagline %></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  	<div class="container">
+  		<div class="row">
+        <div class="col-lg-6 col-12">
+          <div class="rank-score">
+            <div class="col-lg-3 col-3 rank-number">
+              <span class="superscript">#</span><%= @tweet.daily_rank %>
+            </div>
+            <div class="col-lg-9 col-9 rank-details">
+              <p>This was the <%= @tweet.daily_rank > 1 ? @tweet.daily_rank.ordinalize : '' %> most engaging Tweet from <%= @site.account_type %> <span class="tweet-date">on <%= @date.to_formatted_s(:long) %></span>.</p>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-lg-6 col-12 pull-right the-tweet">
+          <blockquote class="twitter-tweet">
+          <p><%= @tweet.tweet_text %></p>
+          &mdash; <%= @tweet.account.name %> (@<%= @tweet.account.screen_name %>) 
+          <a href="https://twitter.com/<%= @tweet.account.screen_name %>/statuses/<%= @tweet.tweet_id %>"><%= @date %></a>
+          </blockquote>
+          <% if @site.cta_iframe.present? %>
+          <iframe src="/iframes/<%= @site.id %>" class="mv-ad" id="iframe1"></iframe>
+          <% end %>
+        </div>  
+        <div class="col-lg-6 col-12">
+          <div class="tweet-stats">
+            <p>
+              Within its first day, this tweet received<br>
+              </i><span class="retweet-count"><i class="icon-retweet"></i> <span class="big-number"><%= pretty_number(@tweet.engagement) %> <%= pluralize(@tweet.engagement, 'retweet', 'retweets') %></span></span><br>
+              <span class="favorite-count"><i class="icon-star"></i> <span class="big-number"><%= pretty_number(@tweet.kudos) %>  <%= pluralize(@tweet.kudos, 'favorite', 'favorites') %></span></span><br>
+              and reached a potential<br>
+              <span class="reach-total"><i class="icon-bullhorn"></i><span class="big-number"><%= pretty_number(@tweet.reach) %>  <%= pluralize(@tweet.reach, 'person', 'people') %></span></span>
+            </p>
+          </div>
+          <hr>
+          <div class="tweet-navigation">
+            <p>Other top Tweets from <%= @site.account_type %> on <%= @date.to_formatted_s(:long) %>:</p>
+            <div class="row">
+              <% if @daily_prev %>
+              <a href="<%= tweet_path(@daily_prev) %>" class="previous">
+                <div class="col-lg-6 col-6">
+                  <span class="navigation-number">
+                    &lsaquo; <%= @daily_prev.daily_rank %>
+                  </span><br>
+                  <span class="navigation-name">
+                    by @<%= @daily_prev.screen_name %>
+                  </span>
+                </div>
+              </a>
+              <% else %>
+                <div class="col-lg-6 col-6">
+                  
+                </div>
+              <% end %>
+              <% if @daily_next %>
+              <a href="<%= tweet_path(@daily_next) %>" class="next">
+                <div class="col-lg-6 col-6">
+                  <span class="navigation-number">
+                    <%= @daily_next.daily_rank %> &rsaquo;
+                  </span><br>
+                  <span class="navigation-name pull-right">
+                    by @<%= @daily_next.screen_name %>
+                  </span>
+                </div>
+              </a>
+              <% else %>
+                <div class="col-lg-6 col-6">
+                  
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-12">
+          <p>&copy; <%= @date.year %> Measured Voice</p>
+          <hr>
+          <p><a href="http://measuredvoice.com">Measured Voice</a> is the only social media tool designed for government. <strong><a href="https://app.measuredvoice.com/signup">Start your free 30-day trial today</a>.</strong></p>
+          <hr>
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <p><b>What is this?</b></p>
+              <p>
+                <%= @site.explanation %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- JavaScript plugins (requires jQuery) -->
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+  <!-- Optionally enable responsive features in IE8 -->
+  
+  <% if @site.google_analytics_code %>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '<%= @site.google_analytics_code %>', '<%= @site.host_url %>');
+    ga('send', 'pageview');
+
+  </script>
+  <% end %>
+  </body>
+</html>
