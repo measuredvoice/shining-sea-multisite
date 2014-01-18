@@ -14,11 +14,12 @@
 #  metrics_ready :boolean          default(FALSE)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  daily_rank    :integer
 #
 
 class TweetMetric < ActiveRecord::Base
   attr_accessible :tweet_id, :published_at, :audience, :reach, :kudos, :engagement, 
-    :tweet_text, :metrics_ready
+    :tweet_text, :metrics_ready, :daily_rank
   
   belongs_to :account
   delegate :twitter_client, :to => :account
@@ -114,11 +115,16 @@ class TweetMetric < ActiveRecord::Base
       (bayes_beta + audience)).to_i
   end
   
-  # TEMPORARY
-  def daily_rank
-    3
+  def previous_by_rank
+    return nil if daily_rank.blank? || daily_rank < 2
+    site.tweet_metrics.from_yesterday.find_by_daily_rank(daily_rank - 1)
   end
-
+  
+  def next_by_rank
+    return nil if daily_rank.blank?
+    site.tweet_metrics.from_yesterday.find_by_daily_rank(daily_rank + 1)
+  end
+  
   def bayes_alpha
     (ENV['SHINING_SEA_ALPHA'] || '4.84').to_f
   end

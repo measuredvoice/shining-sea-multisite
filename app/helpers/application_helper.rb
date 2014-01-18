@@ -30,4 +30,10 @@ module ApplicationHelper
       plural
     end
   end
+
+  def tweet_path(tweet)
+    return '' unless tweet
+    "/#{tweet.account.screen_name}/status/#{tweet.tweet_id}/"
+  end
+  
 end

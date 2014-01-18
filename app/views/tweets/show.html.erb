@@ -80,7 +80,7 @@
                     &lsaquo; <%= @daily_prev.daily_rank %>
                   </span><br>
                   <span class="navigation-name">
-                    by @<%= @daily_prev.screen_name %>
+                    by @<%= @daily_prev.account.screen_name %>
                   </span>
                 </div>
               </a>
@@ -96,7 +96,7 @@
                     <%= @daily_next.daily_rank %> &rsaquo;
                   </span><br>
                   <span class="navigation-name pull-right">
-                    by @<%= @daily_next.screen_name %>
+                    by @<%= @daily_next.account.screen_name %>
                   </span>
                 </div>
               </a>

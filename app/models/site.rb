@@ -271,6 +271,13 @@ class Site < ActiveRecord::Base
       b.mv_score <=> a.mv_score
     end
   end
+  
+  def set_tweet_ranks!
+    ranked_tweets.each_with_index do |tweet_metric, index|
+      tweet_metric.daily_rank = index + 1
+      tweet_metric.save
+    end
+  end
 
   rails_admin do
     configure :name, :string
