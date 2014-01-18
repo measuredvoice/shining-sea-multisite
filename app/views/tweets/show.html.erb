@@ -71,7 +71,7 @@
           </div>
           <hr>
           <div class="tweet-navigation">
-            <p>Other top Tweets from <%= @site.account_type %> on <%= @date.to_formatted_s(:long) %>:</p>
+            <p>Other top <%= @site.tweet_type %> on <%= @date.to_formatted_s(:long) %>:</p>
             <div class="row">
               <% if @daily_prev %>
               <a href="<%= tweet_path(@daily_prev) %>" class="previous">

@@ -267,7 +267,7 @@ class Site < ActiveRecord::Base
   end
   
   def ranked_tweets
-    tweet_metrics.from_yesterday.sort do |a,b|
+    tweet_metrics.from_yesterday.includes(:account).sort do |a,b|
       b.mv_score <=> a.mv_score
     end
   end

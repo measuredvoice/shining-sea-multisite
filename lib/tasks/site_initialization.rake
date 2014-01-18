@@ -63,4 +63,92 @@ namespace :site do
     puts "Finished in #{elapsed} seconds."
     puts "Spent #{time_spent_waiting} seconds waiting."
   end
+
+  desc "Generate a day of HTML for a new site"
+  task :generate_first_html, [:site_id] => :environment do |t, params|
+    start_time = Time.zone.now
+    
+    site = Site.find(params[:site_id])
+    puts "Generating HTML for #{site.name}..."
+    
+    puts "Calculating the rank for all tweets..."
+    site.set_tweet_ranks!
+
+    # TODO: Create a list of routes and filenames to publish,
+    #   and loop through them all at once rather than individually.
+    
+    # First, write files for the individual tweets.
+    app = ActionDispatch::Integration::Session.new(Rails.application)
+    puts "Writing tweet detail pages..."
+    total_tweets = 0
+    site.ranked_tweets.each do |tweet|
+      filename = "#{tweet.account.screen_name}/status/#{tweet.tweet_id}/index.html"
+      
+      puts "  #{filename}..."
+      route = "site/#{site.id}/#{tweet.account.screen_name}/status/#{tweet.tweet_id}"
+      app.get(route)
+      if app.response.success?
+        site.s3_bucket.objects[filename].write(app.response.body)
+        puts "    ...written."
+      else
+        raise "Can't get tweet details from #{route}. (#{app.response.message})"
+      end
+      
+      total_tweets += 1
+    end
+    
+    # Next, write the dated version of the index file.
+    puts "Writing daily ranking file..."
+    yesterday = site.time_zone_obj.now - 1.day
+    daily_file = "top/#{yesterday.strftime('%Y-%m-%d')}/index.html"
+    puts "  #{daily_file}..."
+    daily_route = "site/#{site.id}"
+    app.get(daily_route)
+    if app.response.success?
+      site.s3_bucket.objects[daily_file].write(app.response.body)
+      puts "    ...written."
+    else
+      raise "Can't get daily ranking from #{daily_route}. (#{app.response.message})"
+    end
+    
+    # Next, write the updated iframe file.
+    puts "Writing iframe file..."
+    iframe_file = "iframes/#{site.id}/index.html"
+    puts "  #{iframe_file}..."
+    iframe_route = "iframes/#{site.id}"
+    app.get(iframe_route)
+    if app.response.success?
+      site.s3_bucket.objects[iframe_file].write(app.response.body)
+      puts "    ...written."
+    else
+      raise "Can't get daily iframe from #{iframe_route}. (#{app.response.message})"
+    end
+    
+    # Next, copy the supporting asset files.
+    puts "Writing asset files..."
+    Dir.chdir(Rails.root.join('public'))
+    Dir.glob('assets/**/*.*').each do |asset_file|
+      puts "  #{asset_file}..."
+      site.s3_bucket.objects[asset_file].write(:file => asset_file)
+    end
+    
+    # Finally, write the main index file.
+    puts "Writing index file..."
+    index_file = "index.html"
+    puts "  #{index_file}..."
+    index_route = "site/#{site.id}?main_index=1"
+    app.get(index_route)
+    if app.response.success?
+      site.s3_bucket.objects[index_file].write(app.response.body)
+      puts "    ...written."
+    else
+      raise "Can't get main index from #{index_route}. (#{app.response.message})"
+    end
+
+    puts "Generated HTML for #{total_tweets} tweets."
+    end_time = Time.zone.now
+    
+    elapsed = (end_time - start_time).to_i
+    puts "Finished in #{elapsed} seconds."
+  end
 end
