@@ -25,6 +25,7 @@
 #  partner_logo_url         :text
 #  google_analytics_code    :string(255)
 #  congrats_text            :string(255)
+#  rate_limit_errors        :integer          default(0)
 #
 
 class Site < ActiveRecord::Base

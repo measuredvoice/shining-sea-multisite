@@ -71,12 +71,23 @@ class TweetMetric < ActiveRecord::Base
         tweet = twitter_client.status(tweet_id)
       rescue Twitter::Error::TooManyRequests => error
         # TODO: Note rate limiting and retry after the rate limit expires
-        puts "Rate limit was exceeded."
-        return false
+        puts "Rate limit was exceeded while fetching a tweet."
+        site.increment!(:rate_limit_errors)
+        raise
+      rescue Twitter::Error::NotFound => error
+        # The tweet was probably deleted
+      rescue Twitter::Error => error
+        puts "Unknown Twitter error when fetching tweet: " + error.inspect
+        raise
       rescue Exception => error
         puts "Unknown Exception when getting tweet: " + error.inspect
         return false
       end      
+    end
+    
+    if tweet.nil?
+      self.destroy
+      return false
     end
     
     self.kudos = tweet.favorite_count
@@ -96,8 +107,12 @@ class TweetMetric < ActiveRecord::Base
         # sleep 15
       rescue Twitter::Error::TooManyRequests => error
         # TODO: Note rate limiting and retry after the rate limit expires
-        puts "Rate limit was exceeded."
-        return nil
+        puts "Rate limit was exceeded while counting reach."
+        site.increment!(:rate_limit_errors)
+        raise
+      rescue Twitter::Error => error
+        puts "Unknown Twitter error when counting retweets: " + error.inspect
+        raise
       rescue Exception => error
         puts "Unknown Exception when getting retweets: " + error.inspect
         return nil

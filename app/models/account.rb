@@ -49,6 +49,14 @@ class Account < ActiveRecord::Base
         # puts " checking #{tweet_date}..."
         tweet_date >= day_start && tweet_date <= day_end
       end
+    rescue Twitter::Error::TooManyRequests => error
+      # TODO: Note rate limiting and retry after the rate limit expires
+      puts "Rate limit was exceeded."
+      site.increment!(:rate_limit_errors)
+      raise
+    rescue Twitter::Error => error
+      puts "Unknown Twitter error when listing timeline tweets: " + error.inspect
+      raise
     rescue Exception => error
       puts "Unknown Exception when listing timeline tweets: " + error.inspect
       return []
@@ -78,7 +86,14 @@ class Account < ActiveRecord::Base
     rescue Twitter::Error::TooManyRequests => error
       # TODO: Note rate limiting and retry after the rate limit expires
       puts "Rate limit was exceeded."
-      return nil
+      site.increment!(:rate_limit_errors)
+      raise
+    rescue Twitter::Error::NotFound => error
+      # The account screen name may have changed, or the account is closed.
+      return []
+    rescue Twitter::Error => error
+      puts "Unknown Twitter error when listing timeline tweets: " + error.inspect
+      raise
     rescue Exception => error
       puts "Unknown Exception when listing timeline tweets: " + error.inspect
       return []

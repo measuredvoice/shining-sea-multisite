@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140120180255) do
+ActiveRecord::Schema.define(:version => 20140120215628) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "site_id"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20140120180255) do
     t.text     "partner_logo_url"
     t.string   "google_analytics_code"
     t.string   "congrats_text"
+    t.integer  "rate_limit_errors",        :default => 0
   end
 
   add_index "sites", ["active"], :name => "index_sites_on_active"
