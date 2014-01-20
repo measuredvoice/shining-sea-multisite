@@ -26,6 +26,9 @@ gem 'rest-client'
 gem 'aws-sdk', '~> 1.0'
 gem 'boxer'
 
+# Use DJ to queue data collection and publishing tasks
+gem 'delayed_job_active_record'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
