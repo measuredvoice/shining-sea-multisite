@@ -49,6 +49,10 @@ class TweetMetric < ActiveRecord::Base
     order(:published_at).last
   end
   
+  def self.complete
+    where(:metrics_ready => true)
+  end
+  
   def id=(value)
     self.tweet_id ||= value
   end
@@ -66,7 +70,7 @@ class TweetMetric < ActiveRecord::Base
       begin
         tweet = twitter_client.status(tweet_id)
       rescue Twitter::Error::TooManyRequests => error
-        # This was a rate limit issue, so move on
+        # TODO: Note rate limiting and retry after the rate limit expires
         puts "Rate limit was exceeded."
         return false
       rescue Exception => error
@@ -91,7 +95,7 @@ class TweetMetric < ActiveRecord::Base
         rts = twitter_client.retweeters_of(tweet_id, :count => 100)
         # sleep 15
       rescue Twitter::Error::TooManyRequests => error
-        # This was a rate limit issue, so move on
+        # TODO: Note rate limiting and retry after the rate limit expires
         puts "Rate limit was exceeded."
         return nil
       rescue Exception => error

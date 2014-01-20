@@ -75,6 +75,10 @@ class Account < ActiveRecord::Base
         # puts " checking #{tweet_date}..."
         tweet_date >= 1.day.ago
       end
+    rescue Twitter::Error::TooManyRequests => error
+      # TODO: Note rate limiting and retry after the rate limit expires
+      puts "Rate limit was exceeded."
+      return nil
     rescue Exception => error
       puts "Unknown Exception when listing timeline tweets: " + error.inspect
       return []

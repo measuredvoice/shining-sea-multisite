@@ -63,6 +63,22 @@ class Site < ActiveRecord::Base
     end
   end
   
+  def rate_per_hour_for(the_method)
+    rate_per_minute_for(the_method) * 60
+  end
+  
+  def rate_per_minute_for(the_method)
+    case the_method
+    when :fetch_recent_tweets
+      # per https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline
+      12
+    when :complete_metrics
+      # per https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid
+      # and https://dev.twitter.com/docs/api/1.1/get/statuses/retweeters/ids
+      2
+    end
+  end
+  
   def ready_to_publish?
     s3_is_configured? && dns_is_configured?
   end
