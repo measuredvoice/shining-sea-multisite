@@ -110,6 +110,10 @@ class Account < ActiveRecord::Base
     yesterday_start.end_of_day
   end
 
+  def as_summary(target_date=nil)
+    AccountSummary.from_account(self, target_date || updated_at)
+  end
+
   rails_admin do
     list do
       field :screen_name

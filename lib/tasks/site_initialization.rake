@@ -73,6 +73,12 @@ namespace :site do
     
     puts "Calculating the rank for all tweets..."
     site.set_tweet_ranks!
+    
+    puts "Writing tweet summary JSON files..."
+    site.ranked_tweets.each do |tweet|
+      summary = tweet.as_summary
+      site.write_summary_to_s3(summary)
+    end
 
     # TODO: Create a list of routes and filenames to publish,
     #   and loop through them all at once rather than individually.

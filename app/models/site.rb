@@ -273,12 +273,12 @@ class Site < ActiveRecord::Base
     
   end
 
-  def write_to_s3(summary)
+  def write_summary_to_s3(summary)
     puts "  Writing #{summary.filename} to S3..."
     s3_bucket.objects[summary.filename].write(summary.to_json)
   end
   
-  def written_to_s3?(summary)
+  def summary_written_to_s3?(summary)
     s3_bucket.objects[summary.filename].exists?
   end
   

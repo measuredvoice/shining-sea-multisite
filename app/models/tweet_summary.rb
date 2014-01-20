@@ -14,7 +14,8 @@ class TweetSummary
       :reach        => tweet_metric.reach,
       :kudos        => tweet_metric.kudos,
       :engagement   => tweet_metric.engagement,
-      :mv_score     => tweet_summary.mv_score,
+      :mv_score     => tweet_metric.mv_score,
+      :daily_rank   => tweet_metric.daily_rank,
     )
   end
   
