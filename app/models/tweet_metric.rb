@@ -23,6 +23,7 @@ class TweetMetric < ActiveRecord::Base
   
   belongs_to :account
   delegate :twitter_client, :to => :account
+  delegate :twitter_app_client, :to => :account
   delegate :site, :to => :account
   
   def self.create_from_tweet(tweet)
@@ -42,7 +43,7 @@ class TweetMetric < ActiveRecord::Base
   end
   
   def self.ready_to_complete
-    where("published_at <= ?", 6.hours.ago)
+    where("published_at <= ?", 6.hours.ago).order(:published_at)
   end
   
   def self.most_recent
@@ -103,8 +104,8 @@ class TweetMetric < ActiveRecord::Base
       self.reach = audience
     else
       begin
-        rts = twitter_client.retweeters_of(tweet_id, :count => 100)
-        # sleep 15
+        # Use application-only auth because the rate limit is higher
+        rts = twitter_app_client.retweeters_of(tweet_id, :count => 100)
       rescue Twitter::Error::TooManyRequests => error
         # TODO: Note rate limiting and retry after the rate limit expires
         puts "Rate limit was exceeded while counting reach."

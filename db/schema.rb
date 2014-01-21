@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140120215628) do
+ActiveRecord::Schema.define(:version => 20140121183858) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "site_id"
@@ -19,11 +19,13 @@ ActiveRecord::Schema.define(:version => 20140120215628) do
     t.string   "user_id"
     t.string   "name"
     t.integer  "followers"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.datetime "tweets_checked_at"
   end
 
   add_index "accounts", ["site_id", "screen_name"], :name => "index_accounts_on_site_id_and_screen_name"
+  add_index "accounts", ["site_id", "tweets_checked_at"], :name => "index_accounts_on_site_id_and_tweets_checked_at"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0, :null => false

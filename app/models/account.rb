@@ -2,14 +2,15 @@
 #
 # Table name: accounts
 #
-#  id          :integer          not null, primary key
-#  site_id     :integer
-#  screen_name :string(255)
-#  user_id     :string(255)
-#  name        :string(255)
-#  followers   :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                :integer          not null, primary key
+#  site_id           :integer
+#  screen_name       :string(255)
+#  user_id           :string(255)
+#  name              :string(255)
+#  followers         :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  tweets_checked_at :datetime
 #
 
 class Account < ActiveRecord::Base
@@ -17,7 +18,10 @@ class Account < ActiveRecord::Base
   
   belongs_to :site
   delegate :twitter_client, :to => :site
+  delegate :twitter_app_client, :to => :site
   delegate :time_zone_obj, :to => :site
+  
+  before_save :check_last_tweet_date
   
   has_many :tweet_metrics do
     def from_yesterday
@@ -28,7 +32,11 @@ class Account < ActiveRecord::Base
   end
   
   def self.need_update
-    where("accounts.updated_at < ?", 1.day.ago)
+    where("accounts.updated_at < ?", 20.hours.ago)
+  end
+  
+  def self.need_new_tweets
+    where("tweets_checked_at <= ?", 6.hours.ago).order(:tweets_checked_at)
   end
   
   def tweets_on(metrics_date)
@@ -81,7 +89,7 @@ class Account < ActiveRecord::Base
       twitter_client.user_timeline(timeline_options).find_all do |tweet|
         tweet_date = tweet.created_at.in_time_zone(site.time_zone)
         # puts " checking #{tweet_date}..."
-        tweet_date >= 1.day.ago
+        tweet_date >= 2.days.ago
       end
     rescue Twitter::Error::TooManyRequests => error
       # TODO: Note rate limiting and retry after the rate limit expires
@@ -107,6 +115,15 @@ class Account < ActiveRecord::Base
       next if tm = tweet_metrics.find_by_tweet_id(tweet.id.to_s)
       
       tm = tweet_metrics.create_from_tweet(tweet)
+    end
+    
+    self.tweets_checked_at = Time.zone.now
+    self.save
+  end
+  
+  def check_last_tweet_date
+    if tweets_checked_at.nil?
+      self.tweets_checked_at = 30.days.ago
     end
   end
     

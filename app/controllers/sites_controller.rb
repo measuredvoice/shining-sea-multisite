@@ -3,14 +3,18 @@ class SitesController < ApplicationController
   
   def show
     @site = Site.find(params[:id])
-    @date = @site.time_zone_obj.today - 1.day
-    
     Time.zone = @site.time_zone
+    
+    if params[:target_date]
+      @date = Time.zone.parse(params[:target_date]).to_date
+    else
+      @date = @site.time_zone_obj.today - 1.day
+    end
     
     @is_main_index = params[:main_index] ? true : false
     
     # Build the ranked list of tweets for this day
-    @tweets = @site.ranked_tweets.first(50)
+    @tweets = @site.ranked_tweets_for(@date).first(50)
     
   end
   

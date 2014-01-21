@@ -38,6 +38,7 @@ class Site < ActiveRecord::Base
   validates :name, :presence => true
   
   has_many :accounts
+  
   has_many :tweet_metrics, :through => :accounts do
     def from_yesterday
       account = proxy_association.owner
@@ -55,6 +56,10 @@ class Site < ActiveRecord::Base
     where("twitter_client_key != '' AND twitter_client_secret != ''").order("sites.id")
   end
   
+  def self.in_hour(target_hour)
+    all.find_all {|site| site.current_hour == target_hour}
+  end
+    
   def twitter_client
     @twitter_client ||= Twitter::REST::Client.new do |config|
       config.consumer_key        = twitter_client_key
@@ -62,6 +67,17 @@ class Site < ActiveRecord::Base
       config.access_token        = twitter_retweeter_key
       config.access_token_secret = twitter_retweeter_secret
     end
+  end
+  
+  def twitter_app_client
+    @twitter_app_client ||= Twitter::REST::Client.new do |config|
+      config.consumer_key        = twitter_client_key
+      config.consumer_secret     = twitter_client_secret
+    end
+  end
+  
+  def current_hour
+    time_zone_obj.nil? ? nil : time_zone_obj.now.strftime('%H').to_i
   end
   
   def rate_per_hour_for(the_method)
@@ -76,8 +92,18 @@ class Site < ActiveRecord::Base
     when :complete_metrics
       # per https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid
       # and https://dev.twitter.com/docs/api/1.1/get/statuses/retweeters/ids
-      2
+      # (uses application-only authentication for retweeters)
+      4
     end
+  end
+  
+  def queue_time_for(queue_position, the_method)
+    (queue_position / rate_per_minute_for(the_method)).minutes.from_now
+  end
+  
+  def reset_rate_limit_errors!
+    self.rate_limit_errors = 0
+    self.save!
   end
   
   def ready_to_publish?
@@ -271,7 +297,12 @@ class Site < ActiveRecord::Base
       account = accounts.find_by_screen_name(user.screen_name)
       account.update_from_twitter(user)
     end
-    
+  end
+  
+  def clear_old_tweet_metrics!
+    tweet_metrics.where("published_at < ?", 7.days.ago).each do |tm|
+      tm.destroy
+    end
   end
 
   def write_summary_to_s3(summary)
@@ -283,17 +314,66 @@ class Site < ActiveRecord::Base
     s3_bucket.objects[summary.filename].exists?
   end
   
-  def ranked_tweets
-    tweet_metrics.from_yesterday.includes(:account).sort do |a,b|
-      b.mv_score <=> a.mv_score
-    end
+  def ranked_tweets_for(target_date)
+    tweet_metrics.from_date(target_date).complete.includes(:account).order(:daily_rank)
   end
   
-  def set_tweet_ranks!
-    ranked_tweets.each_with_index do |tweet_metric, index|
+  def set_tweet_ranks!(target_date)
+    tweet_metrics.from_date(target_date).complete.sort do |a,b|
+      b.mv_score <=> a.mv_score
+    end.each_with_index do |tweet_metric, index|
       tweet_metric.daily_rank = index + 1
       tweet_metric.save
     end
+  end
+  
+  def write_final_metrics_for(target_date)
+    tweets = ranked_tweets_for(target_date)
+    tweets.each do |tweet|
+      write_summary_to_s3(tweet.as_summary)
+    end
+    
+    accounts.each do |account|
+      summary = account.as_summary(target_date)
+      summary.tweet_summaries = tweets.find_all do |tm|
+        tm.account == account
+      end.map {|tm| tm.as_summary}
+      write_summary_to_s3(summary)
+    end 
+    
+    ds = DailySummary.from_metrics(target_date, accounts, tweets)
+    write_summary_to_s3(ds)
+    write_summary_to_s3(ds.rankings)
+  end
+  
+  def html_files_to_publish_for(target_date)
+    files_to_publish = []
+    
+    # First, write files for the individual tweets.
+    ranked_tweets_for(target_date).each do |tweet|
+      files_to_publish << {
+        :filename => "#{tweet.account.screen_name}/status/#{tweet.tweet_id}/index.html",
+        :route => "site/#{id}/#{tweet.account.screen_name}/status/#{tweet.tweet_id}",
+      }
+    end
+    
+    # Next, write the dated version of the index file.
+    files_to_publish << {
+      :filename => "top/#{target_date.strftime('%Y-%m-%d')}/index.html",
+      :route => "site/#{id}?target_date=#{target_date.strftime('%Y-%m-%d')}",
+    }
+    
+    # Next, write the updated iframe file.
+    files_to_publish << {
+      :filename => "iframes/#{id}/index.html",
+      :route => "iframes/#{id}",
+    }
+
+    # Finally, write the main index file.
+    files_to_publish << {
+      :filename => "index.html",
+      :route => "site/#{id}?target_date=#{target_date.strftime('%Y-%m-%d')}&main_index=1",
+    }
   end
 
   rails_admin do
