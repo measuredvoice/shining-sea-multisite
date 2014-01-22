@@ -8,7 +8,7 @@ namespace :site do
 
       unless site.ready_to_publish?
         puts "Setting up #{site.name} at #{site.host_url} for the first time..."
-        site.prepare_to_publish!
+        site.prepare_for_publishing!
         
         unless site.ready_to_publish?
           site.active = false
