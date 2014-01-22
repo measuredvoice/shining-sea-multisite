@@ -15,13 +15,12 @@
   <body>
     <div class="container">
       <div class="row">
-        <div class="col-lg-2 col-2">
+        <div class="col-lg-2 col-12">
           <div class="twitter-follow-container">
-            <a href="https://twitter.com/gorillagreets" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @gorillagreets</a>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            <%= render :partial => "shared/twitter_follow_button", :locals => { :site => @site } %>
           </div>
         </div>
-        <div class="col-lg-10 col-10">
+        <div class="col-lg-10 col-12">
           <span id="mv-logo"><a href="http://measuredvoice.com">Measured Voice, the only social media management tool designed for government.</a></span>  
         </div>
       </div>

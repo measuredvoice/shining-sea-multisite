@@ -234,14 +234,6 @@ footer a:hover {
 	top:0;
 }
 
-.twitter-follow-container {
-	display:block;
-	width:140px;
-	height:24px;
-	position:absolute;
-	top: 3px;
-}
-
 .jumbotron {
 	padding:90px 0 10px 0;
 }
@@ -310,6 +302,14 @@ footer a:hover {
 		top:0;
 		right:20px;
 	}
+	
+	.twitter-follow-container {
+    display:block;
+    width:140px;
+    height:24px;
+    position:absolute;
+    top: 3px;
+  }
   
   .top-tweet-column ol {
     margin:2em 0 0 0;

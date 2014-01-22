@@ -78,6 +78,16 @@ class Site < ActiveRecord::Base
     end
   end
   
+  def twitter_account_full_username
+    return nil if twitter_account_username.empty?
+    twitter_account_username.gsub(/^@?/, '@')
+  end
+  
+  def twitter_account_base_username
+    return nil if twitter_account_username.empty?
+    twitter_account_username.gsub(/^@/, '')
+  end
+  
   def current_hour
     time_zone_obj.nil? ? nil : time_zone_obj.now.strftime('%H').to_i
   end
