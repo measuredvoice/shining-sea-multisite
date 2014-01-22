@@ -46,6 +46,8 @@ class Site < ActiveRecord::Base
       from_date(yesterday)
     end
   end
+  
+  after_save :check_for_accounts
 
   def self.active
     where(:active => true).order("sites.id")
@@ -249,6 +251,12 @@ class Site < ActiveRecord::Base
 
   def time_zone_obj
     ActiveSupport::TimeZone.new(time_zone)
+  end
+  
+  def check_for_accounts
+    if active? && registry_csv_url.present? && accounts.count == 0
+      delay.update_accounts!
+    end
   end
   
   def update_accounts!
