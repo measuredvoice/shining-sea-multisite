@@ -493,6 +493,10 @@ class Site < ActiveRecord::Base
         field :twitter_retweeter_key
         field :twitter_retweeter_secret
       end
+      
+      group :recent_status do
+        field :rate_limit_errors
+      end
     end
   end
 end
