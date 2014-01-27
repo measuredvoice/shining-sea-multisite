@@ -314,7 +314,7 @@ class Site < ActiveRecord::Base
     puts "Updating Twitter details..." 
     twitter_users.each do |user|
       account = accounts.find_by_screen_name(user.screen_name)
-      account.update_from_twitter(user)
+      account.update_from_twitter(user) if account.present?
     end
   end
   
