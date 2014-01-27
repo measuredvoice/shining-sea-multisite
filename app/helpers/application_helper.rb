@@ -36,4 +36,14 @@ module ApplicationHelper
     "/#{tweet.account.screen_name}/status/#{tweet.tweet_id}/"
   end
   
+  def link_to_free_trial(site)
+    trial_url = "https://app.measuredvoice.com/signup"
+    if site.mv_partner_name.present?
+      trial_url += "?partner=#{site.mv_partner_name}"
+    end
+    
+    trial_url
+  end
+  
+  
 end
