@@ -43,11 +43,15 @@ class TweetMetric < ActiveRecord::Base
   end
   
   def self.ready_to_complete
-    where("published_at <= ?", 6.hours.ago).order(:published_at)
+    incomplete.where("published_at <= ?", 6.hours.ago).order(:published_at)
   end
   
   def self.most_recent
     order(:published_at).last
+  end
+  
+  def self.incomplete
+    where(:metrics_ready => false)
   end
   
   def self.complete
