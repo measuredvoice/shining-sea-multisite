@@ -26,6 +26,7 @@
 #  google_analytics_code    :string(255)
 #  congrats_text            :string(255)
 #  rate_limit_errors        :integer          default(0)
+#  partner_link_url         :text
 #
 
 class Site < ActiveRecord::Base
@@ -33,7 +34,7 @@ class Site < ActiveRecord::Base
     :tagline, :time_zone, :tweet_type, :active, :send_congrats, :registry_csv_url, 
     :twitter_client_key, :twitter_client_secret, :twitter_retweeter_key, 
     :twitter_retweeter_secret, :twitter_account_username, :mv_partner_name, 
-    :partner_logo_url, :google_analytics_code, :congrats_text 
+    :partner_logo_url, :partner_link_url, :google_analytics_code, :congrats_text 
 
   validates :name, :presence => true
   
@@ -402,6 +403,9 @@ class Site < ActiveRecord::Base
     configure :partner_logo_url do
       label "Partner logo URL"
     end
+    configure :partner_link_url do
+      label "Partner link URL"
+    end
     configure :registry_csv_url do
       label "Registry CSV URL"
     end
@@ -434,6 +438,7 @@ class Site < ActiveRecord::Base
         field :cta_iframe
         field :mv_partner_name
         field :partner_logo_url
+        field :partner_link_url
       
         field :google_analytics_code
       end
@@ -476,6 +481,7 @@ class Site < ActiveRecord::Base
         field :cta_iframe
         field :mv_partner_name
         field :partner_logo_url
+        field :partner_link_url
       
         field :google_analytics_code
       end
