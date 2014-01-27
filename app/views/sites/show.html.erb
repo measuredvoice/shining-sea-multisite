@@ -12,7 +12,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-  	<div class="container">
+  	<div class="container topmost">
       <div class="row">
         <div class="col-lg-2 col-12">
           <div class="twitter-follow-container">
@@ -23,6 +23,19 @@
           <span id="mv-logo"><a href="http://measuredvoice.com">Measured Voice, the only social media management tool designed for government.</a></span>  
         </div>
       </div>
+      <% if @site.partner_logo_url.present? %>
+      <div class="row">
+        <div class="col-lg-12 col-12">
+          <span id="partner-logo">
+            <% if @site.partner_link_url.present? %>
+            <a href="<%= @site.partner_link_url %>"><img src="<%= @site.partner_logo_url %>"></a>
+            <% else %>
+              <img src="<%= @site.partner_logo_url %>">
+            <% end %>
+          </span>
+        </div>
+      </div>
+      <% end %>
     </div>
     <div class="jumbotron">
       <div class="container">

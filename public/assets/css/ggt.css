@@ -230,12 +230,21 @@ footer a:hover {
 	height:90px;
 	background: transparent url('/assets/img/mv-logo-800x248.png') no-repeat top left;
 	background-size: 290px 90px;
-	position:absolute;
-	top:0;
+}
+
+#partner-logo img {
+  text-indent: -9000px;
+  display:block;
+  width:268px;
+  padding-top: 10px;
+}
+
+.topmost {
+  background-color: #eee;
 }
 
 .jumbotron {
-	padding:90px 0 10px 0;
+	padding:10px 0 10px 0;
 }
 
 .top-tweet-column ol {
@@ -302,6 +311,15 @@ footer a:hover {
 		top:0;
 		right:20px;
 	}
+
+  #partner-logo img {
+    text-indent: -9000px;
+    display:block;
+    width:170px;
+    position:absolute;
+    top:90px;
+    right:32px;
+  }
 	
 	.twitter-follow-container {
     display:block;
