@@ -39,6 +39,10 @@ class Account < ActiveRecord::Base
     where("tweets_checked_at <= ?", 6.hours.ago).order(:tweets_checked_at)
   end
   
+  def self.find_by_screen_name(screen_name)
+    where("LOWER(screen_name) = ?", screen_name.downcase).first
+  end
+  
   def tweets_on(metrics_date)
     day_start = metrics_date.beginning_of_day
     day_end   = metrics_date.end_of_day
