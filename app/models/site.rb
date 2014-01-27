@@ -308,7 +308,7 @@ class Site < ActiveRecord::Base
       twitter_users = []
     end
     
-    not_found = accounts_to_update - twitter_users.map {|u| u.screen_name}
+    not_found = accounts_to_update.map {|a| a.downcase} - twitter_users.map {|u| u.screen_name.downcase}
     puts "Didn't find these: #{not_found.inspect}"
     
     puts "Updating Twitter details..." 
