@@ -18,9 +18,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-    <div class="containter">
+    <div class="container">
       <div class="row">
-        <%=raw @site.cta_iframe %>
+        <%= render :inline => @site.cta_iframe, :locals => { :site => @site } %>
       </div>
     </div>
     <!-- JavaScript plugins (requires jQuery) -->

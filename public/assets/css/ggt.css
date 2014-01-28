@@ -168,10 +168,6 @@ iframe.mv-ad {
   height: 160px;
 }
 
-.home-intro iframe.mv-ad {
-  margin-left: -15px;
-}
-
 .tweet-navigation .previous, .tweet-navigation .next {
 	color: #104469;
 	line-height: 1.1;
