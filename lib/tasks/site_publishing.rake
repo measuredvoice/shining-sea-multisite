@@ -27,7 +27,7 @@ namespace :site do
   task :publish_site_files => :environment do
     start_time = Time.zone.now
     
-    Site.active.in_hour(8).each do |site|
+    Site.active.in_hour(9).each do |site|
       target_date = site.time_zone_obj.today - 1.day
 
       next unless site.ready_to_publish?
