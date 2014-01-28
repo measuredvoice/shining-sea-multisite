@@ -37,6 +37,7 @@ class Site < ActiveRecord::Base
     :partner_logo_url, :partner_link_url, :google_analytics_code, :congrats_text 
 
   validates :name, :presence => true
+  validates :congrats_text, :length => { :maximum => 65 }
   
   has_many :accounts
   
@@ -393,6 +394,37 @@ class Site < ActiveRecord::Base
       :filename => "index.html",
       :route => "site/#{id}?target_date=#{target_date.strftime('%Y-%m-%d')}&main_index=1",
     }
+  end
+  
+  def send_congrats_for(target_date)
+    return nil unless ready_to_publish? && send_congrats?
+    puts "Queuing congratulations for #{name}..."
+
+    # Only congratulate an account once
+    congratulated = {}
+
+    # Use simpler queue times, spaced 5 minutes apart
+    queue_spacing = 5.minutes
+    queue_time = Time.zone.now
+    ranked_tweets_for(target_date).limit(10).each do |tm|
+      puts "   retweeting #{tm.tweet_id}..."        
+      queue_time += queue_spacing
+      tm.delay(:run_at => queue_time).post_retweet
+      puts "    (queued at #{queue_time})"
+      
+      unless congratulated[tm.account.id]
+        puts "   congratulating #{tm.account.screen_name} on #{tm.tweet_id}..."        
+        queue_time += queue_spacing
+        tm.delay(:run_at => queue_time).post_congrats_tweet
+        puts "    (queued at #{queue_time})"
+        
+        congratulated[tm.account.id] = true
+      end
+    end
+  end
+  
+  def default_congrats_text
+    "Congrats on writing a great tweet!"
   end
 
   rails_admin do

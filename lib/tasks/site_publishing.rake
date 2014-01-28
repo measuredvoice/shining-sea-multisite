@@ -64,4 +64,21 @@ namespace :site do
     elapsed = (end_time - start_time).to_i
     puts "Finished in #{elapsed} seconds."
   end
+
+  desc "Schedule retweets and congratulatory tweets"
+  task :set_up_publishing => :environment do
+    start_time = Time.zone.now
+    
+    Site.active.in_hour(11).each do |site|
+      target_date = site.time_zone_obj.today - 1.day
+      
+      site.send_congrats_for(target_date)
+    end
+    
+    end_time = Time.zone.now
+    
+    elapsed = (end_time - start_time).to_i
+    puts "Finished in #{elapsed} seconds."
+  end
+  
 end

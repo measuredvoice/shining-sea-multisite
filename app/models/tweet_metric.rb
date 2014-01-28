@@ -129,6 +129,61 @@ class TweetMetric < ActiveRecord::Base
     end
   end
   
+  def post_retweet
+    return nil unless site.send_congrats?
+    
+    puts "Retweeting @{account.screen_name} #{tweet_id}..."
+    
+    begin
+      twitter_client.retweet(tweet_id)
+    rescue Twitter::Error::TooManyRequests => error
+      puts "Rate limit was exceeded while retweeting #{tweet_id}."
+      site.increment!(:rate_limit_errors)
+      return nil
+    rescue Twitter::Error => error
+      puts "Unknown Twitter error when retweeting #{tweet_id}: " + error.inspect
+      return nil
+    rescue Exception => error
+      puts "Unknown Exception when retweeting #{tweet_id}: " + error.inspect
+      return nil
+    end
+  end
+  
+  def post_congrats_tweet
+    return nil unless site.send_congrats?
+    
+    puts "Sending congrats:  " + congrats_tweet_text
+    
+    begin
+      twitter_client.update(congrats_tweet_text, {:in_reply_to_status_id => tweet_id})
+    rescue Twitter::Error::TooManyRequests => error
+      puts "Rate limit was exceeded while congratulating #{tweet_id}."
+      site.increment!(:rate_limit_errors)
+      return nil
+    rescue Twitter::Error => error
+      puts "Unknown Twitter error when congratulating #{tweet_id}: " + error.inspect
+      return nil
+    rescue Exception => error
+      puts "Unknown Exception when congratulating #{tweet_id}: " + error.inspect
+      return nil
+    end
+  end
+  
+  def congrats_tweet_text
+    if site.congrats_text.present? && site.congrats_text.length > 5
+      congrats_blurb = site.congrats_text
+    else
+      congrats_blurb = site.default_congrats_text
+    end
+    
+    "@#{account.screen_name} #{congrats_blurb} #{our_link} " +
+    "(Ranked #{daily_rank.ordinalize} for #{published_at.strftime('%b %-d')}.)"
+  end
+  
+  def our_link
+    "http://#{site.host_url}/#{account.screen_name}/status/#{tweet_id}"  
+  end
+    
   def as_summary
     TweetSummary.from_tweet_metric(account, self, local_published_at)
   end
