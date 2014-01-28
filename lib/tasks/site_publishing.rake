@@ -66,7 +66,7 @@ namespace :site do
   end
 
   desc "Schedule retweets and congratulatory tweets"
-  task :set_up_publishing => :environment do
+  task :send_congrats_tweets => :environment do
     start_time = Time.zone.now
     
     Site.active.in_hour(11).each do |site|
