@@ -12,6 +12,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <%= render "shared/social_sharing_setup" %>
   	<div class="container topmost">
       <div class="row">
         <div class="col-lg-2 col-12">
@@ -55,7 +56,9 @@
 		<div class="row tweet-lists">
 		  <div class="col-12">
 		    <div class="row">
-          <div class="top-tweet-column col-12 col-lg-6">
+          <div class="top-tweet-column col-12 col-lg-6">      
+            <%= render :partial => "shared/social_sharing_buttons", :locals => { :site => @site } %>
+
             <h3>Top <%= @site.tweet_type %> from <%= @date.to_formatted_s(:long) %></h3>
             
             <div class="row">
