@@ -100,6 +100,10 @@ class Account < ActiveRecord::Base
       puts "Rate limit was exceeded."
       site.increment!(:rate_limit_errors)
       raise
+    rescue Twitter::Error::Unauthorized => error
+      # The account is no longer public.
+      puts "Can't get tweets for account #{screen_name}: Not authorized."
+      return []
     rescue Twitter::Error::NotFound => error
       # The account screen name may have changed, or the account is closed.
       return []
