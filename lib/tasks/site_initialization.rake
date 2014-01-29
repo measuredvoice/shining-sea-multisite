@@ -56,7 +56,7 @@ namespace :site do
     start_time = Time.zone.now
     
     site = Site.find(params[:site_id])
-    target_date = site.time_zone_obj.today - 1.day
+    target_date = site.time_zone_obj.now - 1.day
 
     unless site.ready_to_publish?
       puts "Setting up #{site.name} at #{site.host_url} for the first time..."

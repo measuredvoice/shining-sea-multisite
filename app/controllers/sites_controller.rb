@@ -8,7 +8,7 @@ class SitesController < ApplicationController
     if params[:target_date]
       @date = Time.zone.parse(params[:target_date]).to_date
     else
-      @date = @site.time_zone_obj.today - 1.day
+      @date = @site.time_zone_obj.now - 1.day
     end
     
     @is_main_index = params[:main_index] ? true : false

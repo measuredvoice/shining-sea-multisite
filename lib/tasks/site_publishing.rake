@@ -4,7 +4,7 @@ namespace :site do
     start_time = Time.zone.now
     
     Site.active.in_hour(6).each do |site|
-      target_date = site.time_zone_obj.today - 1.day
+      target_date = site.time_zone_obj.now - 1.day
 
       unless site.ready_to_publish?
         puts "Setting up #{site.name} at #{site.host_url} for the first time..."
@@ -28,7 +28,7 @@ namespace :site do
     start_time = Time.zone.now
     
     Site.active.in_hour(9).each do |site|
-      target_date = site.time_zone_obj.today - 1.day
+      target_date = site.time_zone_obj.now - 1.day
 
       next unless site.ready_to_publish?
     
@@ -70,7 +70,7 @@ namespace :site do
     start_time = Time.zone.now
     
     Site.active.in_hour(11).each do |site|
-      target_date = site.time_zone_obj.today - 1.day
+      target_date = site.time_zone_obj.now - 1.day
       
       site.send_congrats_for(target_date)
     end

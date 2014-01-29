@@ -196,12 +196,12 @@ class TweetMetric < ActiveRecord::Base
   
   def previous_by_rank
     return nil if daily_rank.blank? || daily_rank < 2
-    site.tweet_metrics.from_yesterday.find_by_daily_rank(daily_rank - 1)
+    site.tweet_metrics.from_date(published_at.in_time_zone(site.time_zone)).find_by_daily_rank(daily_rank - 1)
   end
   
   def next_by_rank
     return nil if daily_rank.blank?
-    site.tweet_metrics.from_yesterday.find_by_daily_rank(daily_rank + 1)
+    site.tweet_metrics.from_date(published_at.in_time_zone(site.time_zone)).find_by_daily_rank(daily_rank + 1)
   end
   
   def bayes_alpha

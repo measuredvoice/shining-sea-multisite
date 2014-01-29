@@ -23,6 +23,10 @@ module ApplicationHelper
     number.to_s.reverse.gsub(%r{([[:digit:]]{3})(?=[[:digit:]])(?![[:digit:]]*\.)}, "\\1,").reverse
   end
   
+  def pretty_date(date)
+    date.to_date.to_s(:long)
+  end
+  
   def pluralize(number, singular, plural)
     if number == 1
       singular

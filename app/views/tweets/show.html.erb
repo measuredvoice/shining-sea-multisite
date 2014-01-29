@@ -3,7 +3,7 @@
   <head>
     <script type="text/javascript" src="http://use.typekit.com/bvc1jkf.js"></script>
   	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    <title><%= @site.name %> - #<%= @tweet.daily_rank %> on <%= @date.to_formatted_s(:long) %> 
+    <title><%= @site.name %> - #<%= @tweet.daily_rank %> on <%= pretty_date(@date) %> 
       from @<%= @account.screen_name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
@@ -44,7 +44,7 @@
               <span class="superscript">#</span><%= @tweet.daily_rank %>
             </div>
             <div class="col-lg-9 col-9 rank-details">
-              <p>This was the <%= @tweet.daily_rank > 1 ? @tweet.daily_rank.ordinalize : '' %> most engaging Tweet from <%= @site.account_type %> <span class="tweet-date">on <%= @date.to_formatted_s(:long) %></span>.</p>
+              <p>This was the <%= @tweet.daily_rank > 1 ? @tweet.daily_rank.ordinalize : '' %> most engaging Tweet from <%= @site.account_type %> <span class="tweet-date">on <%= pretty_date(@date) %></span>.</p>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@
           <blockquote class="twitter-tweet">
           <p><%= @tweet.tweet_text %></p>
           &mdash; <%= @tweet.account.name %> (@<%= @tweet.account.screen_name %>) 
-          <a href="https://twitter.com/<%= @tweet.account.screen_name %>/statuses/<%= @tweet.tweet_id %>"><%= @date %></a>
+          <a href="https://twitter.com/<%= @tweet.account.screen_name %>/statuses/<%= @tweet.tweet_id %>"><%= pretty_date(@date) %></a>
           </blockquote>
           <% if @site.cta_iframe.present? %>
           <iframe src="/iframes/<%= @site.id %>" class="mv-ad" id="iframe1"></iframe>
@@ -71,7 +71,7 @@
           </div>
           <hr>
           <div class="tweet-navigation">
-            <p>Other top <%= @site.tweet_type %> on <%= @date.to_formatted_s(:long) %>:</p>
+            <p>Other top <%= @site.tweet_type %> on <%= pretty_date(@date) %>:</p>
             <div class="row">
               <% if @daily_prev %>
               <a href="<%= tweet_path(@daily_prev) %>" class="previous">
