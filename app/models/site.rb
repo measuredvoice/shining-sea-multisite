@@ -172,9 +172,20 @@ class Site < ActiveRecord::Base
   end
   
   def s3_bucket
-    AWS::S3.new.buckets[host_url]
+    AWS::S3.new(:region => s3_region).buckets[host_url]
   end
-    
+  
+  def s3_region
+    # Oz Tweets is grandfathered in. If you find yourself adding other cases here,
+    # consider adding an s3_region attribute to the site instead.
+    case host_url
+    when 'oztweets.measuredvoice.com'
+      'ap-southeast-2'
+    else
+      ENV['AWS_REGION']
+    end
+  end
+      
   def dns_is_configured?
     dns_record = fetch_dns_record
     return false if dns_record.blank?
