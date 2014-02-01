@@ -235,6 +235,17 @@ footer a:hover {
   padding-top: 10px;
 }
 
+#delib-logo a {
+  text-indent: -9000px;
+  display:block;
+  width:268px;
+  height:68px;
+  background: transparent url('/assets/img/delib-social-554x156.png') no-repeat top right;
+  background-size: 240px 68px;
+  position:absolute;
+  top:110px;
+}
+
 .topmost {
   background-color: #eee;
 }
@@ -317,6 +328,18 @@ footer a:hover {
     right:32px;
   }
 	
+  #delib-logo a {
+    text-indent: -9000px;
+    display:block;
+    width:170px;
+    height:48px;
+    background: transparent url('/assets/img/delib-social-554x156.png') no-repeat top left;
+    background-size: 170px 48px;
+    position:absolute;
+    top:90px;
+    right:32px;
+  }
+
 	.twitter-follow-container {
     display:block;
     width:140px;
