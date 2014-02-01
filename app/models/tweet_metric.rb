@@ -176,8 +176,10 @@ class TweetMetric < ActiveRecord::Base
       congrats_blurb = site.default_congrats_text
     end
     
+    ranking_date = published_at.in_time_zone(site.time_zone).strftime('%b %-d')
+    
     "@#{account.screen_name} #{congrats_blurb} #{our_link} " +
-    "(Ranked #{daily_rank.ordinalize} for #{published_at.strftime('%b %-d')}.)"
+    "(Ranked #{daily_rank.ordinalize} for #{ranking_date}.)"
   end
   
   def our_link
