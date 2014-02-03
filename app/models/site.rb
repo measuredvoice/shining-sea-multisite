@@ -34,10 +34,12 @@ class Site < ActiveRecord::Base
     :tagline, :time_zone, :tweet_type, :active, :send_congrats, :registry_csv_url, 
     :twitter_client_key, :twitter_client_secret, :twitter_retweeter_key, 
     :twitter_retweeter_secret, :twitter_account_username, :mv_partner_name, 
-    :partner_logo_url, :partner_link_url, :google_analytics_code, :congrats_text 
+    :partner_logo_url, :partner_link_url, :google_analytics_code, :congrats_text, 
+    :top_tweets_limit 
 
   validates :name, :presence => true
   validates :congrats_text, :length => { :maximum => 65 }
+  validates :top_tweets_limit, :numericality => { :only_integer => true, :greater_than => 0 }
   
   has_many :accounts
   
@@ -349,6 +351,10 @@ class Site < ActiveRecord::Base
     tweet_metrics.from_date(target_date).complete.includes(:account).order(:daily_rank)
   end
   
+  def top_ranked_tweets_for(target_date)
+    ranked_tweets_for(target_date).limit(top_tweets_limit)
+  end
+  
   def set_tweet_ranks!(target_date)
     tweet_metrics.from_date(target_date).complete.sort do |a,b|
       b.mv_score <=> a.mv_score
@@ -409,7 +415,7 @@ class Site < ActiveRecord::Base
   
   def send_congrats_for(target_date)
     return nil unless ready_to_publish? && send_congrats?
-    puts "Queuing congratulations for #{name}..."
+    # puts "Queuing congratulations for #{name}..."
 
     # Only congratulate an account once
     congratulated = {}
@@ -417,17 +423,17 @@ class Site < ActiveRecord::Base
     # Use simpler queue times, spaced 5 minutes apart
     queue_spacing = 5.minutes
     queue_time = Time.zone.now
-    ranked_tweets_for(target_date).limit(10).each do |tm|
-      puts "   retweeting #{tm.tweet_id}..."        
+    top_ranked_tweets_for(target_date).each do |tm|
+      # puts "   retweeting #{tm.tweet_id}..."        
       queue_time += queue_spacing
       tm.delay(:run_at => queue_time).post_retweet
-      puts "    (queued at #{queue_time})"
+      # puts "    (queued at #{queue_time})"
       
       unless congratulated[tm.account.id]
-        puts "   congratulating #{tm.account.screen_name} on #{tm.tweet_id}..."        
+        # puts "   congratulating #{tm.account.screen_name} on #{tm.tweet_id}..."        
         queue_time += queue_spacing
         tm.delay(:run_at => queue_time).post_congrats_tweet
-        puts "    (queued at #{queue_time})"
+        # puts "    (queued at #{queue_time})"
         
         congratulated[tm.account.id] = true
       end
@@ -474,6 +480,7 @@ class Site < ActiveRecord::Base
         field :name
         field :tagline
         field :tweet_type
+        field :top_tweets_limit
         field :account_type
         field :twitter_account_username
 
@@ -517,6 +524,7 @@ class Site < ActiveRecord::Base
         field :name
         field :tagline
         field :tweet_type
+        field :top_tweets_limit
         field :account_type
         field :twitter_account_username
 

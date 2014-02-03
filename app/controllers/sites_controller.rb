@@ -14,7 +14,7 @@ class SitesController < ApplicationController
     @is_main_index = params[:main_index] ? true : false
     
     # Build the ranked list of tweets for this day
-    @tweets = @site.ranked_tweets_for(@date).first(50)
+    @tweets = @site.top_ranked_tweets_for(@date)
     
   end
   
