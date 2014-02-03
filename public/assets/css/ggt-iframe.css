@@ -14,6 +14,7 @@ body {
 
 h1, h2, h3 {
 	font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	margin-top: 0px;
 }
 
 #mc_embed_signup form {
