@@ -21,5 +21,9 @@ class SitesController < ApplicationController
   def iframe
     @site = Site.find(params[:id])    
   end
+
+  def not_found
+    @site = Site.find(params[:id])    
+  end
 end
   

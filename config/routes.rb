@@ -14,4 +14,6 @@ ShiningSeaMultisite::Application.routes.draw do
   get "site/:id/:screen_name/status/:tweet_id" => "tweets#show"
 
   get "iframes/:id" => "sites#iframe"
+
+  get "site/:id/not_found" => "sites#not_found"
 end

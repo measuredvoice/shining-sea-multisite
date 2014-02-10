@@ -430,6 +430,12 @@ class Site < ActiveRecord::Base
       :route => "iframes/#{id}",
     }
 
+    # Next, write the current not-found error file.
+    files_to_publish << {
+      :filename => "assets/errors/404.html",
+      :route => "site/#{id}/not_found",
+    }
+
     # Finally, write the main index file.
     files_to_publish << {
       :filename => "index.html",

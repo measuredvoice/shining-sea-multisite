@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="http://use.typekit.com/bvc1jkf.js"></script>
+  	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <title><%= @site.name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/assets/css/ggt.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <%= render "shared/social_sharing_setup" %>
+  	<div class="container topmost">
+      <div class="row">
+        <div class="col-lg-2 col-12">
+          <div class="twitter-follow-container">
+            <%= render :partial => "shared/twitter_follow_button", :locals => { :site => @site } %>
+          </div>
+        </div>
+        <div class="col-lg-10 col-12">
+          <span id="mv-logo"><a href="http://measuredvoice.com">Measured Voice, the only social media management tool designed for government.</a></span>  
+        </div>
+      </div>
+      <% if @site.partner_logo_url.present? %>
+      <div class="row">
+        <div class="col-lg-12 col-12">
+          <span id="partner-logo">
+            <% if @site.partner_link_url.present? %>
+            <a href="<%= @site.partner_link_url %>"><img src="<%= @site.partner_logo_url %>"></a>
+            <% else %>
+              <img src="<%= @site.partner_logo_url %>">
+            <% end %>
+          </span>
+        </div>
+      </div>
+      <% end %>
+    </div>
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="brand col-lg-8 col-12">
+            <% if @is_main_index %>
+            <h1><%= @site.name %></h1>
+            <% else %>
+            <h1><a href="/"><%= @site.name %></a></h1>
+            <% end %>
+            <h3 class="tagline"><%=raw @site.tagline %></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+		<div class="row">
+		  <div class="col-12">
+		    <div class="row">
+          <div class="col-12 col-lg-6">
+            <h2>Page not found.</h2>
+            
+            <p>Sorry, but there&rsquo;s nothing at this URL.</p>
+  
+            <p>
+              <%=raw @site.explanation %>
+            </p>
+
+            <p>See the most recent Tweet rankings on <a href="/">our homepage</a>.</p>
+
+            <h3>Looking for today&rsquo;s rankings?</h3>
+
+            <p>We wait to collect metrics so that Tweets have time to be retweeted or favorited before they&rsquo;re ranked. You might find a link to today&rsquo;s tweets somewhere on the site, but that page won&rsquo;t be written until tomorrow.</p>
+
+            <h3>Expect something that isn&rsquo;t here?</h3>
+
+            <p>If you&rsquo;re looking for something specific on <%= @site.name %> and can&rsquo;t find it, we&rsquo;d love to hear from you. Please send an email to jed [at] measuredvoice.com.</p>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-12">
+          <p>&copy; <%= Time.zone.today.year %> Measured Voice</p>
+          <hr>
+          <p><strong><a href="<%= link_to_free_trial(@site) %>">Start your free 30-day 
+          trial today</a>.</strong></p>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </footer>
+    <!-- JavaScript plugins (requires jQuery) -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <% if @site.google_analytics_code %>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', '<%= @site.google_analytics_code %>', '<%= @site.host_url %>');
+      ga('send', 'pageview');
+
+    </script>
+    <% end %>
+  </body>
+</html>
