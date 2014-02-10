@@ -285,12 +285,7 @@ class Site < ActiveRecord::Base
   end
   
   def update_accounts!
-    # TODO: Catch and report errors in the CSV file
-    current_accounts = CSV.parse(RestClient.get(registry_csv_url)).map do |row|
-      screen_name = row.first
-      return nil unless screen_name.present?
-      screen_name.gsub(/[^a-zA-Z0-9_]/,'')
-    end.find_all {|a| a.present?}
+    current_accounts = list_accounts_from_registry
     
     existing_accounts = accounts.map {|a| a.screen_name}
     
@@ -330,6 +325,35 @@ class Site < ActiveRecord::Base
       account = accounts.find_by_screen_name(user.screen_name)
       account.update_from_twitter(user) if account.present?
     end
+  end
+  
+  def list_accounts_from_registry
+    if gov_registry?
+      options = {:service_id => :twitter}
+      response = MultiJson.load(RestClient.get(registry_csv_url, {:params => options}))
+      accounts = response['accounts']
+      if response['page_count'] > 1
+        puts "Page count: #{response['page_count']}"
+        (2..response['page_count']).each do |page_number|
+          puts "  fetching page #{page_number}..."
+          accounts += MultiJson.load(RestClient.get(registry_csv_url, {:params => options.merge(:page_number => page_number)}))['accounts']
+        end
+      end
+      accounts.map do |a|
+        a['account']
+      end
+    else
+      # TODO: Catch and report errors in the CSV file
+      CSV.parse(RestClient.get(registry_csv_url)).map do |row|
+        screen_name = row.first
+        return nil unless screen_name.present?
+        screen_name.gsub(/[^a-zA-Z0-9_]/,'')
+      end.find_all {|a| a.present?}
+    end
+  end
+
+  def gov_registry?
+    registry_csv_url =~ /registry.usa.gov/
   end
   
   def clear_old_tweet_metrics!
