@@ -9,6 +9,7 @@ gem 'unicorn'
 gem 'pg'
 
 gem 'rails_admin'
+gem 'rails_admin_export', '~> 0.0.1'
 gem 'devise'
 
 gem 'jquery-rails'
