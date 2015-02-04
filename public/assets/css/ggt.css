@@ -392,3 +392,97 @@ footer a:hover {
   }
 
 }
+
+.hover-content{
+  display: block;
+  position: absolute;
+  right: -115px;
+  top: 0;
+  width: 120px;
+  z-index: 1200;
+  padding-left: 5px;
+}
+
+.modal-backdrop{
+  z-index: 0;
+}
+
+.content-registration{
+  position: absolute;
+  z-index: 9999;
+}
+
+.form-horizontal .control-label{
+  float: left;
+}
+.person-form label{
+  font-weight: normal;
+}
+.channel_name,.sent{
+  margin-bottom: 5px;
+  width: 100%;
+  font-weight: bold;
+}
+
+.send_to_mv{
+  font-size: 14px;
+}
+
+.modal-dialog{
+  width: 525px;
+}
+
+.registration .well{
+  background: #fff;
+}
+.registration .well h1{
+  margin: 0;
+  font-weight: bold;
+  color: #003366;
+
+}
+.registration .person-form{
+  margin: 20px;
+}
+.registration .well .control-group{
+  margin: 10px 0;
+}
+
+.registration .well .input-xlarge{
+  height: 55px;
+  border-radius:3px;
+  border: thin solid #ccc;
+  width: 100%; 
+  padding:0 5px;
+}
+
+.registration .btn-primary{
+  font-size: 24px;
+}
+.registration .devise-links{
+  margin-top: 30px;
+  font-size: 20px;
+  font-weight: 300;
+  font-family: 'Roboto', sans-serif;
+  line-height: 30px;
+}
+.parent-buttons{
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0px 3px 5px #999
+}
+
+.each_channel_name{
+  color: #555;
+  text-decoration: none;
+  padding: 5px 0;
+}
+
+.registration .error-message
+{
+  color: red;
+}
+
+#content-registration .registration {
+  display: none;
+}

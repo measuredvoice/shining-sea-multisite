@@ -9,9 +9,132 @@
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/assets/css/ggt.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        function toggle_login_form(){
+          $('#myModal').removeClass('modal');
+          $('#modal-backdrop').removeClass('modal-dropbox');
+          $('#modal-backdrop').css('height','30px');
+          $('.send_to_mv').click(function(){
+            if (document.cookie.indexOf("account_data") > -1){
+              var get_send_to_mv_id = this.parentElement.getAttribute('id');
+              var get_number = get_send_to_mv_id.split("send_to_mv")[1];
+              var to_channel_id = "to_channel" + get_number;
+              $("#"+to_channel_id).show();
+              $(this).hide();
+            }
+            else{
+              $('#content-registration .registration').css('display','block');
+              $('#myModal').addClass('modal');
+              $('#modal-backdrop').addClass('modal-dropbox');
+              $('#myModal').modal('toggle');
+              $('.hover-content').css('z-index',1);
+            }
+          });
+        }
+        toggle_login_form();
+        function logged_in(){
+          if (document.cookie.indexOf("account_data") > -1){
+            function getCookie(cname) {
+              var name = cname + "=";
+              var ca = document.cookie.split(';');
+              for(var i=0; i<ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+              }
+              return "";
+            }
+            $('.logout-form').click(function(){
+              document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+              $('#before_login').show();
+              $('#after_login').hide();
+              var x = document.getElementsByClassName("hover-content");
+              var i;
+              for (i = 0; i < x.length; i++) {
+                var hover_content = "";
+                x[i].innerHTML = hover_content;
+              }
+            })
+            var account_cookie = unescape(getCookie("account_data"));
+            var account_data_cookie = account_cookie.replace(/\+/gi, " ").split(",");
+            var x = document.getElementsByClassName("hover-content");
+            var i;
+            $('#before_login').hide();
+            $('#after_login').show();
+            for (i = 0; i < x.length; i++) {
+              var hover_content = "<div class='send_to_mv' id='send_to_mv_"+i.toString()+"'><button class='channel_name btn-primary btn send_to_mv'>Send To MV</button></div><div class='to_channel' id='to_channel_"+i.toString()+"'> <div class='channel_name btn-primary btn'>To Channel</div><div class='parent-buttons'>";
+              for (var j = account_data_cookie.length - 1; j > 0; j--) {
+                hover_content += "<a href='#' class='each_channel_name'>#"+account_data_cookie[j]+"</a><br>";
+              };
+              hover_content +="</div></div><div class='sent btn-primary btn'>Sent!</div>"
+              x[i].innerHTML = hover_content;
+              $('.to_channel').hide();
+              $('.sent').hide();
+              toggle_login_form();
+            }
+            $('.each_channel_name').click(function(e) {
+              e.preventDefault();
+              var tweet_id = this.parentNode.parentNode.parentNode.id;
+              var person_id = account_data_cookie[0];
+              var channel_name = this.innerHTML;
+              var that = this
+              var url = "/";
+              $.ajax({
+                type: "POST",
+                url: "https://omnia.measuredvoice.com/api_idea"+".json",
+                data: {"tweet_id": tweet_id, "person_id": person_id, "channel_name": channel_name },
+                dataType: "html",
+                success: function(data) {
+                  $("#"+that.parentNode.parentNode.id).hide();
+                  $($(that.parentNode.parentNode.parentNode).find($(".sent"))[0]).show()
+                  $('.sent').click(function(){
+                    $('.to_channel').show();
+                    $($(that.parentNode.parentNode.parentNode).find($(".sent"))[0]).hide()
+                  })
+                },
+                error: function(err) {
+                }
+              });
+            });
+          };
+        };
+        logged_in();
+        $("#new_person").submit(function(e){
+          e.preventDefault();
+          var email = $("#person_email").val();
+          var password = $("#person_password").val();
+          var url = "/";
+          $.ajax({
+            type: "POST",
+            url: "https://omnia.measuredvoice.com/api_login"+".json",
+            data: {"email": email, "password" : password },
+            dataType: "html",
+            success: function(data) {
+              var account_data = JSON.parse(data)
+              var d = new Date();
+              d.setTime(d.getTime() + (24*60*60*1000));
+              var expires = "expires="+d.toUTCString();
+              document.cookie='account_data='+account_data + "; " + expires;
+              $('#before_login').hide();
+              $('#after_login').show();
+              $('#content-registration').hide();
+              logged_in();
+              $('.fade').removeClass('in').addClass('out');
+            },
+            error: function(err) {
+              var x = document.getElementsByClassName("error-message");
+              x[0].innerHTML = "Invalid Email address or password!";
+            }
+        });
+        })
+      })
+  </script>
     <%= render "shared/social_sharing_setup" %>
   	<div class="container topmost">
       <div class="row">
@@ -74,17 +197,22 @@
             </div>
             
             <ol>
+            <%count = 50%>
     		    <% @tweets.each do |tweet| %>
     		      <li>
     		        <a href="/<%= tweet.account.screen_name %>/status/<%= tweet.tweet_id %>/" class="details-link">More details</a>
-    		        <div class="that-twitter-embed-thingy">
+    		        <div class="that-twitter-embed-thingy" id="tweet_id_<%=count%>">
     		        <blockquote class="twitter-tweet">
     		        <p><%= tweet.tweet_text %></p>
     		        &mdash; <%= tweet.account.name %> (@<%= tweet.account.screen_name %>) 
     		        <a href="https://twitter.com/<%= tweet.account.screen_name %>/statuses/<%= tweet.tweet_id %>"><%= pretty_date(@date) %></a>
     		        </blockquote>
+                  <div class="hover-content" id="<%=tweet[:tweet_id]%>">
+                    <button class='channel_name btn-primary btn send_to_mv'>Send To MV</button>
+                  </div>
     		        </div>
     		      </li>
+              <%count -= 1%>
     		    <% end %>
     		    </ol>
           </div>
@@ -106,6 +234,61 @@
 			</div>
 		</div>
 	</div>
+  <div id="content-registration" class="container">
+    <div class="registration  fade"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:block">
+        <div class="fade in" id="modal-backdrop" style="height: 984px;" data-dismiss="modal">
+        </div>
+          <div class="modal-dialog">
+            <div class="well ">
+            <h1 class="text-left">Log in to Measured Voice</h1>
+              <form accept-charset="UTF-8" class="form-horizontal person-form" id="new_person" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="Xrxe6etdiDEnBEsbfaEkIxjJ8BWRHJFAsGDfHPwS7s8="></div>
+                <!-- <h3>Login to Measured Voice</h3> -->     
+
+                <div class="error-message"></div>                 
+                <fieldset>
+                  <div class="control-group">
+                    <label for="person_email">Your Email</label>
+                    <div class="controls">
+                      <input class="input-xlarge" id="person_email" name="person[email]" size="30" type="email">
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="control-group multi-line">
+                    <label for="person_password">Your Password</label>
+                    <div class="controls">
+                      <input class="input-xlarge" id="person_password" name="person[password]" size="30" type="password">
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="control-group">
+                    <label class="control-label" for="optionsCheckboxList">&nbsp;</label>
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input name="person[remember_me]" type="hidden" value="0"><input id="person_remember_me" name="person[remember_me]" type="checkbox" value="1">
+                        Keep me signed in
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+
+
+                <div class="form-actions">
+                  <input class="btn btn-primary btn-lg btn-block" name="commit" type="submit" value="Login">
+                </div>
+                <p class="devise-links">
+                  Don't have an account yet? <a href="/signup">Sign Up here</a>.<br>
+                  <a href="/reset_password">Forgot your password?</a><br>
+                </p>
+              </form>
+            </div>
+          </div>
+    </div>
+
+  </div>
   <footer>
     <div class="container">
       <div class="row">
