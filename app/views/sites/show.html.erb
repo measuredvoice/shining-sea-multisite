@@ -16,6 +16,7 @@
   <body>
     <script type="text/javascript">
       $(document).ready(function(){
+        $('#content-registration .registration').css('display','none');
         function toggle_login_form(){
           $('#myModal').removeClass('modal');
           $('#modal-backdrop').removeClass('modal-dropbox');
@@ -29,7 +30,6 @@
               $(this).hide();
             }
             else{
-              $('#content-registration .registration').css('display','block');
               $('#myModal').addClass('modal');
               $('#modal-backdrop').addClass('modal-dropbox');
               $('#myModal').modal('toggle');
