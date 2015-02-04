@@ -1,0 +1,55 @@
+<div id="content-registration" class="container">
+    <div class="registration  fade"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:block">
+        <div class="fade in" id="modal-backdrop" style="height: 984px;" data-dismiss="modal">
+        </div>
+          <div class="modal-dialog">
+            <div class="well ">
+            <h1 class="text-left">Log in to Measured Voice</h1>
+              <form accept-charset="UTF-8" class="form-horizontal person-form" id="new_person" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="Xrxe6etdiDEnBEsbfaEkIxjJ8BWRHJFAsGDfHPwS7s8="></div>
+                <!-- <h3>Login to Measured Voice</h3> -->     
+
+                <div class="error-message"></div>                 
+                <fieldset>
+                  <div class="control-group">
+                    <label for="person_email">Your Email</label>
+                    <div class="controls">
+                      <input class="input-xlarge" id="person_email" name="person[email]" size="30" type="email">
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="control-group multi-line">
+                    <label for="person_password">Your Password</label>
+                    <div class="controls">
+                      <input class="input-xlarge" id="person_password" name="person[password]" size="30" type="password">
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="control-group">
+                    <label class="control-label" for="optionsCheckboxList">&nbsp;</label>
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input name="person[remember_me]" type="hidden" value="0"><input id="person_remember_me" name="person[remember_me]" type="checkbox" value="1">
+                        Keep me signed in
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+
+
+                <div class="form-actions">
+                  <input class="btn btn-primary btn-lg btn-block" name="commit" type="submit" value="Login">
+                </div>
+                <p class="devise-links">
+                  Don't have an account yet? <a href="/signup">Sign Up here</a>.<br>
+                  <a href="/reset_password">Forgot your password?</a><br>
+                </p>
+              </form>
+            </div>
+          </div>
+    </div>
+
+  </div>
