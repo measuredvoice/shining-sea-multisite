@@ -126,6 +126,7 @@
               $('#content-registration').hide();
               logged_in();
               $('.fade').removeClass('in').addClass('out');
+              $('.out').removeClass('modal-backdrop');
               $('body').removeClass('modal-open');
             },
             error: function(err) {
