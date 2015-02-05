@@ -13,6 +13,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $('#content-registration .registration').css('display','none');
+        function toggle_login_form(){
+          $('#myModal').removeClass('modal');
+          $('#modal-backdrop').removeClass('modal-dropbox');
+          $('#modal-backdrop').css('height','30px');
+          $('.send_to_mv').click(function(){
+            if (document.cookie.indexOf("account_data") > -1){
+              var get_send_to_mv_id = this.parentElement.getAttribute('id');
+              var get_number = get_send_to_mv_id.split("send_to_mv")[1];
+              var to_channel_id = "to_channel" + get_number;
+              $("#"+to_channel_id).show();
+              $(this).hide();
+            }
+            else{
+              $('#myModal').addClass('modal');
+              $('#modal-backdrop').addClass('modal-dropbox');
+              $('#myModal').modal('toggle');
+              $('.hover-content').css('z-index',1);
+            }
+          });
+        }
+        toggle_login_form();
+        function logged_in(){
+          if (document.cookie.indexOf("account_data") > -1){
+            function getCookie(cname) {
+              var name = cname + "=";
+              var ca = document.cookie.split(';');
+              for(var i=0; i<ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+              }
+              return "";
+            }
+            $('.logout-form').click(function(){
+              document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+              $('#before_login').show();
+              $('#after_login').hide();
+              var x = document.getElementsByClassName("hover-content");
+              var i;
+              for (i = 0; i < x.length; i++) {
+                var hover_content = "";
+                x[i].innerHTML = hover_content;
+              }
+            })
+            var account_cookie = unescape(getCookie("account_data"));
+            var account_data_cookie = account_cookie.replace(/\+/gi, " ").split(",");
+            var x = document.getElementsByClassName("hover-content");
+            var i;
+            $('#before_login').hide();
+            $('#after_login').show();
+            for (i = 0; i < x.length; i++) {
+              var hover_content = "<div class='send_to_mv' id='send_to_mv_"+i.toString()+"'><button class='channel_name btn-primary btn send_to_mv'>Send To MV</button></div><div class='to_channel' id='to_channel_"+i.toString()+"'> <div class='channel_name btn-primary btn'>To Channel</div><div class='parent-buttons'>";
+              for (var j = account_data_cookie.length - 1; j > 0; j--) {
+                hover_content += "<a href='#' class='each_channel_name'>#"+account_data_cookie[j]+"</a><br>";
+              };
+              hover_content +="</div></div><div class='sent btn-primary btn'>Sent!</div>"
+              x[i].innerHTML = hover_content;
+              $('.to_channel').hide();
+              $('.sent').hide();
+              toggle_login_form();
+            }
+            $('.each_channel_name').click(function(e) {
+              e.preventDefault();
+              var tweet_id = this.parentNode.parentNode.parentNode.id;
+              var person_id = account_data_cookie[0];
+              var channel_name = this.innerHTML;
+              var that = this
+              var url = "/";
+              $.ajax({
+                type: "POST",
+                url: "https://omnia.measuredvoice.com/api_idea"+".json",
+                data: {"tweet_id": tweet_id, "person_id": person_id, "channel_name": channel_name },
+                dataType: "html",
+                success: function(data) {
+                  $("#"+that.parentNode.parentNode.id).hide();
+                  $($(that.parentNode.parentNode.parentNode).find($(".sent"))[0]).show()
+                  $('.sent').click(function(){
+                    $('.send_to_mv').show();
+                    $($(that.parentNode.parentNode.parentNode).find($(".sent"))[0]).hide()
+                  })
+                },
+                error: function(err) {
+                }
+              });
+            });
+          };
+        };
+        logged_in();
+        $("#new_person").submit(function(e){
+          e.preventDefault();
+          var email = $("#person_email").val();
+          var password = $("#person_password").val();
+          var url = "/";
+          $.ajax({
+            type: "POST",
+            url: "https://omnia.measuredvoice.com/api_login"+".json",
+            data: {"email": email, "password" : password },
+            dataType: "html",
+            success: function(data) {
+              var account_data = JSON.parse(data)
+              var d = new Date();
+              d.setTime(d.getTime() + (24*60*60*1000));
+              var expires = "expires="+d.toUTCString();
+              document.cookie='account_data='+account_data + "; " + expires;
+              $('#before_login').hide();
+              $('#after_login').show();
+              $('#content-registration').hide();
+              logged_in();
+              $('.fade').removeClass('in').addClass('out');
+              $('.out').removeClass('modal-backdrop');
+              $('body').removeClass('modal-open');
+            },
+            error: function(err) {
+              var x = document.getElementsByClassName("error-message");
+              x[0].innerHTML = "Invalid Email address or password!";
+            }
+        });
+        })
+      })
+  </script>
     <%= render "shared/social_sharing_setup" %>
     <div class="container">
       <div class="row">
