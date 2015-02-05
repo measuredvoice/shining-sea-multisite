@@ -83,7 +83,7 @@
                 <span class="reach-total"><i class="icon-bullhorn"></i><span class="big-number"><%= pretty_number(@tweet.reach) %>  <%= pluralize(@tweet.reach, 'person', 'people') %></span></span>
               </p>
             </div>
-            <div class=" pull-right hover-content" id="<%=@tweet.id%>">
+            <div class=" pull-right hover-content" id="<%=@tweet.tweet_id%>">
               <button class='channel_name btn-primary btn send_to_mv'>Send To MV</button>
             </div>
           </div>
