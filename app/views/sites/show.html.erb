@@ -120,7 +120,7 @@
               var d = new Date();
               d.setTime(d.getTime() + (24*60*60*1000));
               var expires = "expires="+d.toUTCString();
-              document.cookie='account_data='+account_data + "; " + expires + ";domain=.measuredvoice.com";
+              document.cookie='account_data='+account_data + ";domain=.measuredvoice.com;path=/;" + expires;
               $('#before_login').hide();
               $('#after_login').show();
               $('#content-registration').hide();
