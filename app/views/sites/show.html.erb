@@ -82,13 +82,14 @@
               e.preventDefault();
               var tweet_id = this.parentNode.parentNode.parentNode.id;
               var person_id = account_data_cookie[0];
+              var channel_id = account_data_cookie[1];
               var channel_name = this.innerHTML;
               var that = this
               var url = "/";
               $.ajax({
                 type: "POST",
                 url: "https://omnia.measuredvoice.com/api_idea"+".json",
-                data: {"tweet_id": tweet_id, "person_id": person_id, "channel_name": channel_name },
+                data: {"tweet_id": tweet_id, "person_id": person_id, "channel_id": channel_id, "channel_name": channel_name },
                 dataType: "html",
                 success: function(data) {
                   $("#"+that.parentNode.parentNode.id).hide();
