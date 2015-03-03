@@ -69,8 +69,8 @@
             $('#after_login').show();
             for (i = 0; i < x.length; i++) {
               var hover_content = "<div class='send_to_mv' id='send_to_mv_"+i.toString()+"'><button class='channel_name btn-primary btn send_to_mv'>Send To MV</button></div><div class='to_channel' id='to_channel_"+i.toString()+"'> <div class='channel_name btn-primary btn'>To Channel</div><div class='parent-buttons'>";
-              for (var j = account_data_cookie.length - 1; j > 0; j--) {
-                hover_content += "<a href='#' class='each_channel_name'>#"+account_data_cookie[j]+"</a><br>";
+              for (var j = account_data_cookie.length - 1; j > 0; j=j-2) {
+                hover_content += "<a href='#' class='each_channel_name' data-channel_id='"+accont_data_cookie[j]+"'>#"+account_data_cookie[j+1]+"</a><br>";
               };
               hover_content +="</div></div><div class='sent btn-primary btn'>Sent!</div>"
               x[i].innerHTML = hover_content;
@@ -82,7 +82,7 @@
               e.preventDefault();
               var tweet_id = this.parentNode.parentNode.parentNode.id;
               var person_id = account_data_cookie[0];
-              var channel_id = account_data_cookie[1];
+              var channel_id = $(this).data('channel_id');
               var channel_name = this.innerHTML;
               var that = this
               var url = "/";
