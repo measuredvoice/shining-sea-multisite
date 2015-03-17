@@ -110,11 +110,12 @@
           e.preventDefault();
           var email = $("#person_email").val();
           var password = $("#person_password").val();
+          var rememberMe = $("#person_remember_me").val();
           var url = "/";
           $.ajax({
             type: "POST",
-            url: "https://omnia.measuredvoice.com/api_login"+".json",
-            data: {"email": email, "password" : password },
+            url: "https://<%= ENV['MV_HOST'] %>.measuredvoice.com/api_login"+".json",
+            data: {"email": email, "password" : password, "remember_me": rememberMe },
             dataType: "html",
             success: function(data) {
               var account_data = JSON.parse(data)
