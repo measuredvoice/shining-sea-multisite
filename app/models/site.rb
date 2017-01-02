@@ -197,7 +197,7 @@ class Site < ActiveRecord::Base
     return false if alias_target.blank?
     
     alias_host = alias_target[:dns_name]
-    if alias_host.present? && alias_host =~ /^s3-website/
+    if alias_host.present? && alias_host =~ /^s3-website|cloudfront.net/
       return true
     end
     
